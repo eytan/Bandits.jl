@@ -1,2 +1,5 @@
 # Bandits.jl
-Julia library for multi-armed bandit research
+
+A Julia package for simulating the behavior of new algorithms for solving
+multi-armed bandit problems, including the stochastic and adversarial bandit
+problems.

@@ -1,0 +1,30 @@
+module TestRandomChoice
+    using Bandits, Distributions
+    using Base.Test
+
+    algorithm = RandomChoice(MLELearner())
+    @test isa(algorithm, Algorithm)
+    @test isa(algorithm.learner, MLELearner)
+
+    bandit = StochasticBandit(
+        [Bernoulli(0.1), Bernoulli(0.2)]
+    )
+
+    K = count_arms(bandit, MinimalContext(1))
+    initialize!(algorithm, K)
+
+    for t in 1:1_000_000
+        context = StochasticContext(t, K)
+        a = choose_arm(algorithm, context)
+        learn!(algorithm, context, a, draw(bandit, context, a))
+    end
+
+    for a in 1:K
+        @test abs(means(algorithm.learner)[a] - mean(bandit.arms[a])) < 0.1
+        @test abs(stds(algorithm.learner)[a] - std(bandit.arms[a])) < 0.1
+    end
+
+    ns = counts(algorithm.learner)
+    @test 400_000 <= ns[1] <= 600_000
+    @test 400_000 <= ns[2] <= 600_000
+end
