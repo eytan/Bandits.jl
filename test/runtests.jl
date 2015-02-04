@@ -44,8 +44,8 @@ my_tests = [
     "05_games/01_game.jl",
     "05_games/02_stochastic.jl",
 
-    "06_simulators/01_play_game.jl",
-    "06_simulators/02_simulator.jl",
+    "06_simulators/03_play_game.jl",
+    "06_simulators/05_simulate.jl",
 ]
 
 println("Running tests:")

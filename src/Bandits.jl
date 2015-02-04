@@ -68,7 +68,15 @@ module Bandits
     include(joinpath("05_games", "02_stochastic.jl"))
 
     # Simulators
-    export play_game!, simulate
-    include(joinpath("06_simulators", "01_play_game.jl"))
-    include(joinpath("06_simulators", "02_simulator.jl"))
+    export
+        SingleGameStatistics,
+        CoreSingleGameStatistics,
+        AverageGameStatistics,
+        CoreAverageGameStatistics
+    export play_game!, play_games!, simulate
+    include(joinpath("06_simulators", "01_game_statistics.jl"))
+    include(joinpath("06_simulators", "02_average_game_statistics.jl"))
+    include(joinpath("06_simulators", "03_play_game.jl"))
+    include(joinpath("06_simulators", "04_play_games.jl"))
+    include(joinpath("06_simulators", "05_simulate.jl"))
 end
