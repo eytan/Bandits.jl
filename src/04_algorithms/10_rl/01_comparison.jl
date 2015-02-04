@@ -1,4 +1,5 @@
-immutable ReinforcementComparison <: Algorithm
+immutable ReinforcementComparison{L <: Learner} <: Algorithm
+    learner::L
     α::Float64
     β::Float64
     r0::Float64
@@ -7,8 +8,14 @@ immutable ReinforcementComparison <: Algorithm
     p::Vector{Float64}
 end
 
-function ReinforcementComparison(α::Real, β::Real, r0::Real)
+function ReinforcementComparison(
+    learner::Learner,
+    α::Real,
+    β::Real,
+    r0::Real,
+)
     return ReinforcementComparison(
+        learner,
         float64(α),
         float64(β),
         float64(r0),
@@ -19,6 +26,7 @@ function ReinforcementComparison(α::Real, β::Real, r0::Real)
 end
 
 function initialize!(algorithm::ReinforcementComparison, K::Integer)
+    initialize!(algorithm.learner, K)
     resize!(algorithm.π, K)
     resize!(algorithm.p, K)
     fill!(algorithm.π, 1.0) # π0
@@ -37,6 +45,7 @@ function learn!(
     a::Integer,
     r::Real,
 )
+    learn!(algorithm.learner, context, a, r)
     α = algorithm.α
     algorithm.r_bar[1] = (1 - α) * algorithm.r_bar[1] + α * r
     algorithm.π[a] += algorithm.β * (r - algorithm.r_bar[1])

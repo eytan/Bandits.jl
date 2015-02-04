@@ -2,7 +2,7 @@ module TestHedge
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = Hedge(1.0)
+    algorithm = Hedge(MLELearner(), 1.0)
     @test isa(algorithm, Algorithm)
 
     bandit = StochasticBandit(

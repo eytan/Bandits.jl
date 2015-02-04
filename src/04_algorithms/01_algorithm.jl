@@ -1,6 +1,10 @@
 @doc """
 An Algorithm object handles the problem of selecting an arm on each trial
 based on previous experiences.
+
+All algorithm objects must contain a learner object in order to track
+simulation statistics consistently across algorithms, even though some
+algorithms must **not** make use of the learner when making decisions.
 """ ->
 abstract Algorithm
 

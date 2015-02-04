@@ -4,11 +4,6 @@ end
 
 MOSS(learner::Learner) = MOSS(learner, Array(Float64, 0))
 
-function initialize!(algorithm::MOSS, K::Integer)
-    initialize!(algorithm.learner, K)
-    return
-end
-
 function choose_arm(algorithm::MOSS, context::Context)
     μs = means(algorithm.learner)
     ns = counts(algorithm.learner)
