@@ -76,3 +76,12 @@ function choose_arm(algorithm::UCB2, context::Context)
 
     return chosen_a
 end
+
+function Base.show(io::IO, algorithm::UCB2)
+    @printf(
+        io,
+        "UCB2(%f, %s)",
+        algorithm.α,
+        string(algorithm.learner),
+    )
+end

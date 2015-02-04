@@ -12,3 +12,7 @@ Choose an arm uniformly at random.
 function choose_arm(algorithm::RandomChoice, context::Context)
     return rand(1:context.K)
 end
+
+function Base.show(io::IO, algorithm::RandomChoice)
+    @printf(io, "RandomChoice")
+end

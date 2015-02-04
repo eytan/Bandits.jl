@@ -92,3 +92,7 @@ Draw a sample from the posterior for arm a.
 function Base.rand(learner::BetaLearner, a::Integer)
     return rand(Beta(learner.αs[a], learner.βs[a]))
 end
+
+function Base.show(io::IO, learner::BetaLearner)
+    @printf(io, "BetaLearner(%f, %f)", learner.α₀, learner.β₀)
+end

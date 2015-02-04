@@ -20,3 +20,13 @@ function choose_arm(algorithm::DecreasingEpsilonGreedy, context::Context)
         return preferred_arm(algorithm, context)
     end
 end
+
+function Base.show(io::IO, algorithm::DecreasingEpsilonGreedy)
+    @printf(
+        io,
+        "DecreasingEpsilonGreedy(%f, %f, %s)",
+        algorithm.c,
+        algorithm.d,
+        string(algorithm.learner),
+    )
+end

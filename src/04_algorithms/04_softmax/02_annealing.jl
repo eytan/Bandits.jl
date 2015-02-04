@@ -47,3 +47,12 @@ function choose_arm(algorithm::AnnealingSoftmax, context::Context)
     softmax!(algorithm.probs, algorithm.tmeans)
     return rand(Categorical(algorithm.probs))
 end
+
+function Base.show(io::IO, algorithm::AnnealingSoftmax)
+    @printf(
+        io,
+        "AnnealingSoftmax(%f, %s)",
+        algorithm.τ₀,
+        string(algorithm.learner),
+    )
+end

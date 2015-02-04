@@ -36,12 +36,7 @@ end
 Update the agent's beliefs about the reward distributions of the arms given
 a reward r from arm a.
 """ ->
-function learn!(
-    learner::Learner,
-    context::Context,
-    a::Integer,
-    r::Real,
-)
+function learn!(learner::Learner, context::Context, a::Integer, r::Real)
     error("learn!(learner, context, a, r) not implemented abstractly")
 end
 

@@ -38,3 +38,12 @@ function learn!(algorithm::Hedge, context::Context, a::Integer, r::Real)
     softmax!(algorithm.ps, algorithm.wsums)
     return
 end
+
+function Base.show(io::IO, algorithm::Hedge)
+    @printf(
+        io,
+        "Hedge(%f, %s)",
+        algorithm.η,
+        string(algorithm.learner),
+    )
+end

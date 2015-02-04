@@ -30,3 +30,11 @@ function choose_arm(algorithm::MOSS, context::Context)
 
     return chosen_a
 end
+
+function Base.show(io::IO, algorithm::MOSS)
+    @printf(
+        io,
+        "MOSS(%s)",
+        string(algorithm.learner),
+    )
+end

@@ -17,3 +17,12 @@ function choose_arm(algorithm::EpsilonGreedy, context::Context)
         return preferred_arm(algorithm, context)
     end
 end
+
+function Base.show(io::IO, algorithm::EpsilonGreedy)
+    @printf(
+        io,
+        "EpsilonGreedy(%f, %s)",
+        algorithm.ε,
+        string(algorithm.learner),
+    )
+end

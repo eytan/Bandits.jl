@@ -30,3 +30,12 @@ function choose_arm(algorithm::Pursuit, context::Context)
 
     return rand(Categorical(algorithm.ps))
 end
+
+function Base.show(io::IO, algorithm::Pursuit)
+    @printf(
+        io,
+        "Pursuit(%f, %s)",
+        algorithm.β,
+        string(algorithm.learner),
+    )
+end

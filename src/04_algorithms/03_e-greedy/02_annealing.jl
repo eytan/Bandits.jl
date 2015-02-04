@@ -19,3 +19,7 @@ function choose_arm(algorithm::AnnealingEpsilonGreedy, context::Context)
         return preferred_arm(algorithm, context)
     end
 end
+
+function Base.show(io::IO, algorithm::AnnealingEpsilonGreedy)
+    @printf(io, "AnnealingEpsilonGreedy(%s)", string(algorithm.learner))
+end
