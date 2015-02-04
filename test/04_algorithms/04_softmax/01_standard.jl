@@ -2,7 +2,7 @@ module TestSoftmax
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = Softmax(MLELearner(), 1.0)
+    algorithm = Softmax(MLELearner(0.0, 1.0), 1.0)
     @test isa(algorithm, Algorithm)
     @test isa(algorithm.learner, MLELearner)
 

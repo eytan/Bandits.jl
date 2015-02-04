@@ -2,7 +2,7 @@ module TestUCBV
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = UCBV(MLELearner())
+    algorithm = UCBV(MLELearner(0.0, 1.0))
     @test isa(algorithm, Algorithm)
     @test isa(algorithm.learner, MLELearner)
 

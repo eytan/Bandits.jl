@@ -2,7 +2,7 @@ module TestReinforcementComparison
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = ReinforcementComparison(MLELearner(), 0.5, 0.5, 0.5)
+    algorithm = ReinforcementComparison(MLELearner(0.0, 1.0), 0.5, 0.5, 0.5)
     @test isa(algorithm, Algorithm)
 
     bandit = StochasticBandit(

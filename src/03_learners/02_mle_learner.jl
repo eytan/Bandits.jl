@@ -17,7 +17,7 @@ end
 Create an MLELearner object specifying only a default mean and standard
 deviation.
 """ ->
-function MLELearner(μ₀::Real = 0.0, σ₀::Real = 1.0)
+function MLELearner(μ₀::Real, σ₀::Real)
     return MLELearner(
       Array(Int64, 0),
       Array(Float64, 0),

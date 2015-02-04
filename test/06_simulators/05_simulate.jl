@@ -6,6 +6,7 @@ module TestSimulator
         UCB1(MLELearner(0.5, 0.25)),
         Softmax(MLELearner(0.5, 0.25), 0.1),
         ThompsonSampling(BetaLearner()),
+        ThompsonSampling(BootstrapMLELearner(1000, 0.5, 0.25)),
     ]
 
     bandits = [
