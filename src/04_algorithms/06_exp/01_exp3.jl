@@ -1,12 +1,16 @@
-immutable Exp3 <: Algorithm
+immutable Exp3{L <: Learner} <: Algorithm
+    learner::L
     γ::Float64
     w::Vector{Float64}
     p::Vector{Float64}
 end
 
-Exp3(γ::Real) = Exp3(float64(γ), Array(Float64, 0), Array(Float64, 0))
+function Exp3(learner::Learner, γ::Real)
+    Exp3(learner, float64(γ), Array(Float64, 0), Array(Float64, 0))
+end
 
 function initialize!(algorithm::Exp3, K::Integer)
+    initialize!(algorithm.learner, K)
     resize!(algorithm.w, K)
     resize!(algorithm.p, K)
     fill!(algorithm.w, 1.0)
@@ -14,18 +18,17 @@ function initialize!(algorithm::Exp3, K::Integer)
     return
 end
 
-# NB: Assumes p is set correctly
 function choose_arm(algorithm::Exp3, context::Context)
     return rand(Categorical(algorithm.p))
 end
 
-# NB: Assumes p is set correctly
-function learn!(algorithm::Exp3, context::Context, i::Integer, r::Real)
+function learn!(algorithm::Exp3, context::Context, a::Integer, r::Real)
+    learn!(algorithm.learner, context, a, r)
     γ = algorithm.γ
-    algorithm.w[i] *= exp((γ / context.K) * (r / algorithm.p[i]))
+    algorithm.w[a] *= exp((γ / context.K) * (r / algorithm.p[a]))
     z = sum(algorithm.w)
-    for i in 1:context.K
-        algorithm.p[i] = γ * (1 / context.K) + (1 - γ) * (algorithm.w[i] / z)
+    for a in 1:context.K
+        algorithm.p[a] = γ * (1 / context.K) + (1 - γ) * (algorithm.w[a] / z)
     end
     return
 end

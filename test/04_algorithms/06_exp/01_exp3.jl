@@ -2,7 +2,7 @@ module TestExp3
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = Exp3(0.1)
+    algorithm = Exp3(MLELearner(), 0.1)
     @test isa(algorithm, Algorithm)
 
     bandit = StochasticBandit(

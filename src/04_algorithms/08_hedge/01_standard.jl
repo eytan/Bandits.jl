@@ -1,11 +1,13 @@
-type Hedge <: Algorithm
+type Hedge{L <: Learner} <: Algorithm
+    learner::L
     η::Float64
     sums::Vector{Float64}
     wsums::Vector{Float64}
     ps::Vector{Float64}
 end
 
-Hedge(η::Real) = Hedge(
+Hedge(learner::Learner, η::Real) = Hedge(
+    learner,
     float64(η),
     Array(Float64, 0),
     Array(Float64, 0),
@@ -13,6 +15,7 @@ Hedge(η::Real) = Hedge(
 )
 
 function initialize!(algorithm::Hedge, K::Integer)
+    initialize!(algorithm.learner, K)
     resize!(algorithm.sums, K)
     resize!(algorithm.wsums, K)
     resize!(algorithm.ps, K)
@@ -27,6 +30,7 @@ function choose_arm(algorithm::Hedge, context::Context)
 end
 
 function learn!(algorithm::Hedge, context::Context, a::Integer, r::Real)
+    learn!(algorithm.learner, context, a, r)
     algorithm.sums[a] += r
     for i in 1:context.K
         algorithm.wsums[i] = algorithm.η * algorithm.sums[i]
