@@ -32,3 +32,12 @@ function learn!(algorithm::Exp3, context::Context, a::Integer, r::Real)
     end
     return
 end
+
+function Base.show(io::IO, algorithm::Exp3)
+    @printf(
+        io,
+        "Softmax(%f, %s)",
+        algorithm.γ,
+        string(algorithm.learner),
+    )
+end

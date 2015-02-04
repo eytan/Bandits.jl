@@ -35,3 +35,11 @@ function choose_arm(algorithm::UCB1Tuned, context::Context)
 
     return chosen_a
 end
+
+function Base.show(io::IO, algorithm::UCB1Tuned)
+    @printf(
+        io,
+        "UCB1Tuned(%s)",
+        string(algorithm.learner),
+    )
+end

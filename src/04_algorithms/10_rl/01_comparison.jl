@@ -52,3 +52,14 @@ function learn!(
     softmax!(algorithm.p, algorithm.π)
     return
 end
+
+function Base.show(io::IO, algorithm::ReinforcementComparison)
+    @printf(
+        io,
+        "ReinforcementComparison(%f, %f, %f, %s)",
+        algorithm.α,
+        algorithm.β,
+        algorithm.r0,
+        string(algorithm.learner),
+    )
+end

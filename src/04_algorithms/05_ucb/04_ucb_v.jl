@@ -52,3 +52,14 @@ function choose_arm(algorithm::UCBV, context::Context)
 
     return chosen_a
 end
+
+function Base.show(io::IO, algorithm::UCBV)
+    @printf(
+        io,
+        "UCBV(%f, %f, %f, %s)",
+        algorithm.b,
+        algorithm.c,
+        algorithm.ζ,
+        string(algorithm.learner),
+    )
+end

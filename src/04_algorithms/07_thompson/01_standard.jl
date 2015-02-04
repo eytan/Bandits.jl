@@ -14,3 +14,11 @@ function choose_arm(algorithm::ThompsonSampling, context::Context)
 
     return chosen_a
 end
+
+function Base.show(io::IO, algorithm::ThompsonSampling)
+    @printf(
+        io,
+        "ThompsonSampling(%s)",
+        string(algorithm.learner),
+    )
+end

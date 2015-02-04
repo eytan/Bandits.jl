@@ -89,3 +89,7 @@ function learn!(
 
     return
 end
+
+function Base.show(io::IO, learner::MLELearner)
+    @printf(io, "MLELearner(%f, %f)", learner.μ₀, learner.σ₀)
+end
