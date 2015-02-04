@@ -67,7 +67,8 @@ module Bandits
     # Games
     export Game, StochasticGame
     include(joinpath("05_games", "01_game.jl"))
-    include(joinpath("05_games", "02_stochastic.jl"))
+    include(joinpath("05_games", "02_data_queue.jl"))
+    include(joinpath("05_games", "03_stochastic.jl"))
 
     # Simulators
     export
