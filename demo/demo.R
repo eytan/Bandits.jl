@@ -8,7 +8,13 @@ ggplot(
 
 ggplot(
     subset(tmp, T > 3),
-    aes(x = T, y = AvgRegret, color = Algorithm)
+    aes(x = T, y = AvgInstantaneousRegret, color = Algorithm)
+) +
+    geom_line()
+
+ggplot(
+    subset(tmp, T > 3),
+    aes(x = T, y = AvgCumulativeRegret, color = Algorithm)
 ) +
     geom_line()
 
