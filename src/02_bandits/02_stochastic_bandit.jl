@@ -11,22 +11,26 @@ all of this cached information.
 """ ->
 immutable StochasticBandit{D <: UnivariateDistribution} <: ProbabilisticBandit
     arms::Vector{D}
+    means::Vector{Float64}
     pseudo_regrets::Vector{Float64}
     max_reward::Float64
     best_arm::Int64
 
     function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D})
         K = length(arms)
+        means = Array(Float64, K)
         pseudo_regrets = Array(Float64, K)
         max_reward = -Inf
         for a in 1:K
-            max_reward = max(max_reward, mean(arms[a]))
+            m = mean(arms[a])
+            means[a] = m
+            max_reward = max(max_reward, m)
         end
         for a in 1:K
-            pseudo_regrets[a] = max_reward - mean(arms[a])
+            pseudo_regrets[a] = max_reward - means[a]
         end
         best_arm = indmin(pseudo_regrets)
-        return new(arms, pseudo_regrets, max_reward, best_arm)
+        return new(arms, means, pseudo_regrets, max_reward, best_arm)
     end
 end
 
@@ -69,5 +73,4 @@ function best_arm(bandit::StochasticBandit, context::Context)
     return bandit.best_arm
 end
 
-# TODO:
-# Provide mean and standard deviation per arm?
+means(bandit::StochasticBandit) = bandit.means

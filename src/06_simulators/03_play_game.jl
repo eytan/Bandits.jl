@@ -55,7 +55,7 @@ function play_game!(game::StochasticGame, statistics::SingleGameStatistics)
         end
 
         # We update the core simulation statistics for this game
-        update!(statistics, a_star, c, a, b, r, g)
+        update!(statistics, algorithm.learner, bandit, a_star, c, a, b, r, g)
     end
 
     # All changes to state occur via mutation, so we return nothing
