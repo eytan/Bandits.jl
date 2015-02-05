@@ -2,7 +2,7 @@ module TestEpsilonGreedy
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = EpsilonGreedy(MLELearner(), 0.1)
+    algorithm = EpsilonGreedy(MLELearner(0.0, 1.0), 0.1)
     @test isa(algorithm, Algorithm)
     @test isa(algorithm.learner, MLELearner)
 

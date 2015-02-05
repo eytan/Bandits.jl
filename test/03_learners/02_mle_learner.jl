@@ -2,7 +2,7 @@ module TestMLELearner
     using Bandits, Distributions
     using Base.Test
 
-    learner = MLELearner()
+    learner = MLELearner(0.0, 1.0)
 
     bandit = StochasticBandit(
         [

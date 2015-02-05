@@ -2,7 +2,7 @@ module TestUCB1Tuned
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = UCB1Tuned(MLELearner())
+    algorithm = UCB1Tuned(MLELearner(0.0, 1.0))
     @test isa(algorithm, Algorithm)
     @test isa(algorithm.learner, MLELearner)
 

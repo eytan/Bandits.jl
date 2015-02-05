@@ -2,7 +2,7 @@ module TestPursuit
     using Bandits, Distributions
     using Base.Test
 
-    algorithm = Pursuit(MLELearner(), 0.00001)
+    algorithm = Pursuit(MLELearner(0.0, 1.0), 0.00001)
     @test isa(algorithm, Algorithm)
 
     bandit = StochasticBandit(
