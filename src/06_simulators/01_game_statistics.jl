@@ -22,8 +22,8 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
     chosen_arm::Vector{Int}
     chose_best::BitVector
     knows_best::BitVector
-    # TODO: Track MSE comparing mu - mu_hat summed over all arms.
-    # TODO: Track MSE comparing mu - mu_hat for the optimal arm.
+    mse::Vector{Float64}
+    se_best::Vector{Float64}
 
     function CoreSingleGameStatistics(T::Integer)
         reward = Array(Float64, T)
@@ -32,6 +32,8 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
         chosen_arm = Array(Int, T)
         chose_best = BitArray(T)
         knows_best = BitArray(T)
+        mse = Array(Float64, T)
+        se_best = Array(Float64, T)
         return new(
             T,
             reward,
@@ -40,6 +42,8 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
             chosen_arm,
             chose_best,
             knows_best,
+            mse,
+            se_best,
         )
     end
 end
@@ -49,6 +53,8 @@ Update statistics for the current trial.
 """ ->
 function update!(
     statistics::CoreSingleGameStatistics,
+    learner::Learner,
+    bandit::Bandit,
     a_star::Integer,
     c::Context,
     a::Integer,
@@ -66,5 +72,13 @@ function update!(
     statistics.chosen_arm[c.t] = a
     statistics.chose_best[c.t] = a_star == a
     statistics.knows_best[c.t] = a_star == b
+    learner_ms = means(learner)
+    bandit_ms = means(bandit)
+    mse = 0.0
+    for a in 1:c.K
+        mse += (learner_ms[a] - bandit_ms[a])^2
+    end
+    statistics.mse[c.t] = mse
+    statistics.se_best[c.t] = (learner_ms[a_star] - bandit_ms[a_star])^2
     return
 end

@@ -27,3 +27,19 @@ ggplot(
 ) +
     geom_line()
 ggsave("average_best_arm_identified.pdf", height = 8, width = 12)
+
+ggplot(
+    subset(tmp, T > 3),
+    aes(x = T, y = AvgMSE, color = Algorithm)
+) +
+    geom_line() +
+    scale_y_log10()
+ggsave("average_mse.pdf", height = 8, width = 12)
+
+ggplot(
+    subset(tmp, T > 3),
+    aes(x = T, y = AvgSEBest, color = Algorithm)
+) +
+    geom_line() +
+    scale_y_log10()
+ggsave("average_se_best.pdf", height = 8, width = 12)
