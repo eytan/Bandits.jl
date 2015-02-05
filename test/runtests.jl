@@ -42,7 +42,8 @@ my_tests = [
     "04_algorithms/10_rl/02_pursuit.jl",
 
     "05_games/01_game.jl",
-    "05_games/02_stochastic.jl",
+    "05_games/02_data_queue.jl",
+    "05_games/03_stochastic.jl",
 
     "06_simulators/03_play_game.jl",
     "06_simulators/05_simulate.jl",
