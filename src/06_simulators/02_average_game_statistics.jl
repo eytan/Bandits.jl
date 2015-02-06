@@ -44,15 +44,17 @@ function dump(
     io::IO,
     algorithm::Algorithm,
     bandit_id::Integer,
+    delay::Integer,
     statistics::CoreAverageGameStatistics,
 )
     # Print out data in TSV format
     for t in 1:statistics.T
         @printf(
             io,
-            "%s\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
+            "%s\t%d\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
             string(algorithm),
             bandit_id,
+            delay,
             t,
             statistics.avg_reward[t],
             statistics.avg_instantaneous_regret[t],
