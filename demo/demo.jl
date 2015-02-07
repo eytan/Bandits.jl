@@ -33,7 +33,7 @@ algorithms = [
 ]
 
 bandits = [
-    StochasticBandit([Bernoulli(0.1), Bernoulli(0.2), Bernoulli(0.3)]),
+    StochasticBandit([Bernoulli(0.15), Bernoulli(0.1), Bernoulli(0.2), Bernoulli(0.35), Bernoulli(0.3)]),
 ]
 
 io = open("demo.tsv", "w")

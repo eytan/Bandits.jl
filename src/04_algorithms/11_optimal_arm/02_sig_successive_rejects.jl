@@ -11,9 +11,10 @@
 # batch processing we are going to do anyways.
 type EstimatingBestArm{L <: Learner} <: Algorithm
     learner::L
-    active_arms::Vector{Int}
+    active_arms::Vector{Int}  # IDs of arms that haven't been eliminated
     num_active_arms::Int
-    current_arm_index::Int
+    current_arm_index::Int    # Counter for implementing round-robin sampling
+                              # of arms
     # TODO: add user configurable sig. level.
 end
 
@@ -31,9 +32,7 @@ end
 function choose_arm(algorithm::EstimatingBestArm, context::Context)
     # if there is only one arm left, play that one
     if algorithm.num_active_arms == 1
-        # note we could also write algorithm.active_arms[1] if
-        # we were sure everything worked correctly
-        return algorithm.active_arms[algorithm.current_arm_index]
+        return algorithm.active_arms[1]
     end
 
     # run each arm at least twice to get proper stds for arms
@@ -46,14 +45,14 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
 
     # compute upper and lower bounds of active arms, and identify
     # the arm whose upper bound is the lowest
-    min_upper_bound, min_lower_bound, min_arm_index = -Inf, Inf, 1
     arm_means = means(algorithm.learner)[algorithm.active_arms] 
     arm_stds = stds(algorithm.learner)[algorithm.active_arms]
     arm_upper_bounds = arm_means + 1.96*arm_stds
     arm_lower_bounds = arm_means - 1.96*arm_stds
     min_upper_bound, min_arm_index = findmin(arm_upper_bounds)
 
-    # determine if the min arm is significantly 
+    # determine if the min arm is significantly worse, i.e., there
+    # is no arm whose lower bound is less than the min's upper bound
     min_is_significantly_worse = true
     for active_index in 1:algorithm.num_active_arms
         if min_upper_bound > arm_lower_bounds[active_index]
@@ -61,16 +60,19 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
             break
         end
     end
+
+    # if the min arm is significantly worse, nuke it.
     if min_is_significantly_worse
         splice!(algorithm.active_arms, min_arm_index)
         algorithm.num_active_arms -= 1
-        # move a step back so that we don't skip the arm
-        # that follows the arm we just deleted
+        # if we deleted the current arm, move a step back we don't
+        # skip the arm that follows the arm we just nuked
         if min_arm_index == algorithm.current_arm_index
             algorithm.current_arm_index -= 1
         end
     end
 
+    # step forward and return the current active arm.
     algorithm.current_arm_index =
       (algorithm.current_arm_index % algorithm.num_active_arms) + 1
     return algorithm.active_arms[algorithm.current_arm_index]
