@@ -1,16 +1,17 @@
 using Bandits, Distributions
 
 # Number of trials in a game
-T = 100
+T = 2000
 
 # Number of simulated games per algorithm/bandit pair
 # Set this below 10,000 to get results very quickly
-S = 100_000
+S = 10_000
 
 learner = MLELearner(0.5, 0.25)
 
 algorithms = [
     RandomChoice(learner),
+    EstimatingBestArm(learner),
     EpsilonGreedy(learner, 0.01),
     EpsilonGreedy(learner, 0.1),
     AnnealingEpsilonGreedy(learner),
@@ -28,7 +29,7 @@ algorithms = [
     Hedge(learner, 0.1),
     MOSS(learner),
     ReinforcementComparison(learner, 0.1, 0.1, 1.0),
-    Pursuit(learner, 0.1),
+    Pursuit(learner, 0.1)
 ]
 
 bandits = [
