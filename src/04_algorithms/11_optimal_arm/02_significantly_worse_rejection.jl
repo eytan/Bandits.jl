@@ -1,5 +1,5 @@
 using HypothesisTests
-#### EstimatingBestArm algorithm
+#### SignificantlyWorseRejection algorithm
 
 # Explores all arms round robin, and drops arms whose upper CI
 # is lower than the lower CI of all other arms.
@@ -10,7 +10,7 @@ using HypothesisTests
 # An improved version may do some FDR sort of thing.
 # One interesting idea is that this might jive well with the
 # batch processing we are going to do anyways.
-type EstimatingBestArm{L <: Learner} <: Algorithm
+type SignificantlyWorseRejection{L <: Learner} <: Algorithm
     learner::L
     active_arms::Vector{Int}  # IDs of arms that haven't been eliminated
     num_active_arms::Int
@@ -19,18 +19,68 @@ type EstimatingBestArm{L <: Learner} <: Algorithm
     # TODO: add user configurable sig. level.
 end
 
-function EstimatingBestArm(learner::Learner)
-    EstimatingBestArm(learner, Array(Int, 0), 0, 1)
+function SignificantlyWorseRejection(learner::Learner)
+    SignificantlyWorseRejection(learner, Array(Int, 0), 0, 1)
 end
 
-function initialize!(algorithm::EstimatingBestArm, K::Integer)
+function initialize!(algorithm::SignificantlyWorseRejection, K::Integer)
     initialize!(algorithm.learner, K)
     algorithm.active_arms = 1:K
     algorithm.num_active_arms = K
     return
 end
 
-function choose_arm(algorithm::EstimatingBestArm, context::Context)
+@doc """
+Learn about the reward distribution of the a-th arm. Most algorithms will
+delegate this method to an included learner object.
+""" ->
+function learn!(
+    algorithm::SignificantlyWorseRejection,
+    context::Context,
+    a::Integer,
+    r_t::Real,
+)
+    learn!(algorithm.learner, context, a, r_t)
+
+    # Drop arms that are significantly worse
+    if algorithm.num_active_arms == 1
+        return  # nothing to do
+    end
+    
+
+    # TODO: replace all CI computations with the bootstrap
+
+    # compute upper and lower bounds of active arms, and identify
+    # the min arm, with the lowest upper bound, and
+    # the max arm, with the greatest lower bound.
+
+    arm_means = means(algorithm.learner)[algorithm.active_arms] 
+    arm_stds = stds(algorithm.learner)[algorithm.active_arms]
+    ns = counts(algorithm.learner)[algorithm.active_arms]
+
+    arm_upper_bounds = arm_means + 1.96*arm_stds
+    arm_lower_bounds = arm_means - 1.96*arm_stds
+    min_upper_bound, min_arm_index = findmin(arm_upper_bounds)
+    max_lower_bound, max_arm_index = findmax(arm_lower_bounds)
+
+    # compute CI for difference in means; see TODO above
+    (upper, lower) = CI2(
+        arm_means[max_arm_index], arm_means[min_arm_index],
+        ns[max_arm_index], ns[min_arm_index],
+        arm_stds[max_arm_index]^2, arm_stds[min_arm_index]^2
+    )
+
+    # if the min arm is significantly worse, nuke it.
+    if (sign(lower) != sign(upper))
+        splice!(algorithm.active_arms, min_arm_index)
+        algorithm.num_active_arms -= 1
+        if algorithm.current_arm_index == min_arm_index
+            algorithm.current_arm_index -= 1
+        end
+    end
+end
+
+function choose_arm(algorithm::SignificantlyWorseRejection, context::Context)
     # if there is only one arm left, play that one
     if algorithm.num_active_arms == 1
         return algorithm.active_arms[1]
@@ -44,40 +94,6 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
         end
     end
 
-    # compute upper and lower bounds of active arms, and identify
-    # the arm whose upper bound is the lowest
-    arm_means = means(algorithm.learner)[algorithm.active_arms] 
-    arm_stds = stds(algorithm.learner)[algorithm.active_arms]
-    arm_upper_bounds = arm_means + 1.96*arm_stds
-    arm_lower_bounds = arm_means - 1.96*arm_stds
-    min_upper_bound, min_arm_index = findmin(arm_upper_bounds)
-
-    # determine if the min arm is significantly worse, i.e., there
-    # is no arm whose lower bound is less than the min's upper bound
-    min_is_significantly_worse = true
-    for active_index in 1:algorithm.num_active_arms
-        p = welch_test(
-            arm_means[active_index], arm_means[min_arm_index],
-            ns[active_index], ns[min_arm_index],
-            arm_stds[active_index]^2, arm_stds[min_arm_index]^2
-        )
-        if p > 0.05
-            min_is_significantly_worse = false
-            break
-        end
-    end
-
-    # if the min arm is significantly worse, nuke it.
-    if min_is_significantly_worse
-        splice!(algorithm.active_arms, min_arm_index)
-        algorithm.num_active_arms -= 1
-        # if we deleted the current arm, move a step back we don't
-        # skip the arm that follows the arm we just nuked
-        if min_arm_index == algorithm.current_arm_index
-            algorithm.current_arm_index -= 1
-        end
-    end
-
     # step forward and return the current active arm.
     algorithm.current_arm_index =
       (algorithm.current_arm_index % algorithm.num_active_arms) + 1
@@ -85,22 +101,21 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
 end
 
 # Adapted from HypothesisTests.jl:t.jl
-function welch_test(mx, my, nx, ny, varx, vary)
-    # return p-value for test that difference is non-zero
+function CI2(mx, my, nx, ny, varx, vary)
     diff = mx - my
     stderr = sqrt(varx/nx + vary/ny)
     t = diff/stderr
     df = (varx / nx + vary / ny)^2 / ((varx / nx)^2 / (nx - 1) + (vary / ny)^2 / (ny - 1))
     if df <= 0 || isnan(df)
-        return 1
+        return (-1, 1)
     end
-    pvalue(UnequalVarianceTTest(nx, ny, diff, df, stderr, t, 0))
+    ci(UnequalVarianceTTest(nx, ny, diff, df, stderr, t, 0))
 end
 
-function Base.show(io::IO, algorithm::EstimatingBestArm)
+function Base.show(io::IO, algorithm::SignificantlyWorseRejection)
     @printf(
         io,
-        "EstimatingBestArm(%s)",
+        "SignificantlyWorseRejection(%s)",
         string(algorithm.learner),
     )
 end

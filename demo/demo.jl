@@ -11,7 +11,7 @@ learner = MLELearner(0.5, 0.25)
 
 algorithms = [
     RandomChoice(learner),
-    EstimatingBestArm(learner),
+    SignificantlyWorseRejection(learner),
     EpsilonGreedy(learner, 0.01),
     EpsilonGreedy(learner, 0.1),
     AnnealingEpsilonGreedy(learner),
@@ -29,7 +29,7 @@ algorithms = [
     Hedge(learner, 0.1),
     MOSS(learner),
     ReinforcementComparison(learner, 0.1, 0.1, 1.0),
-    Pursuit(learner, 0.1)
+    Pursuit(learner, 0.1),
 ]
 
 bandits = [

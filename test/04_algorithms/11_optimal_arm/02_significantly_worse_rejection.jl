@@ -3,7 +3,7 @@ module TestEstimatingBestArm
     using Base.Test
 
     function test_optimal_arm()
-        algorithm = EstimatingBestArm(MLELearner(0.0, 1.0))
+        algorithm = SignificantlyWorseRejection(MLELearner(0.0, 1.0))
         @test isa(algorithm, Algorithm)
         #@test isa(algorithm.learner, BetaLearner)
 
