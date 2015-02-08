@@ -1,3 +1,4 @@
+using HypothesisTests
 #### EstimatingBestArm algorithm
 
 # Explores all arms round robin, and drops arms whose upper CI
@@ -36,7 +37,7 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
     end
 
     # run each arm at least twice to get proper stds for arms
-    ns = counts(algorithm.learner)
+    ns = counts(algorithm.learner)[algorithm.active_arms]
     for a in 1:algorithm.num_active_arms
         if ns[a] < 2
             return a
@@ -47,15 +48,20 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
     # the arm whose upper bound is the lowest
     arm_means = means(algorithm.learner)[algorithm.active_arms] 
     arm_stds = stds(algorithm.learner)[algorithm.active_arms]
-    arm_upper_bounds = arm_means + 1.96*arm_stds
-    arm_lower_bounds = arm_means - 1.96*arm_stds
+    arm_upper_bounds = arm_means + 1.16*arm_stds
+    arm_lower_bounds = arm_means - 1.16*arm_stds
     min_upper_bound, min_arm_index = findmin(arm_upper_bounds)
 
     # determine if the min arm is significantly worse, i.e., there
     # is no arm whose lower bound is less than the min's upper bound
     min_is_significantly_worse = true
     for active_index in 1:algorithm.num_active_arms
-        if min_upper_bound > arm_lower_bounds[active_index]
+        p = welch_test(
+            arm_means[active_index], arm_means[min_arm_index],
+            ns[active_index], ns[min_arm_index],
+            arm_stds[active_index]^2, arm_stds[min_arm_index]^2
+        )
+        if p > 0.01
             min_is_significantly_worse = false
             break
         end
@@ -76,6 +82,19 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
     algorithm.current_arm_index =
       (algorithm.current_arm_index % algorithm.num_active_arms) + 1
     return algorithm.active_arms[algorithm.current_arm_index]
+end
+
+# Adapted from HypothesisTests.jl:t.jl
+function welch_test(mx, my, nx, ny, varx, vary)
+    # return p-value for test that difference is non-zero
+    diff = mx - my
+    stderr = sqrt(varx/nx + vary/ny)
+    t = diff/stderr
+    df = (varx / nx + vary / ny)^2 / ((varx / nx)^2 / (nx - 1) + (vary / ny)^2 / (ny - 1))
+    if df <= 0 || isnan(df)
+        return 1
+    end
+    pvalue(UnequalVarianceTTest(nx, ny, diff, df, stderr, t, 0))
 end
 
 function Base.show(io::IO, algorithm::EstimatingBestArm)
