@@ -10,7 +10,7 @@ function simulate(
 
     # Print out a header to STDOUT in TSV format
     @printf(io, "Algorithm\tBandit\tT\tAvgReward\tAvgInstantaneousRegret\t")
-    @printf(io, "AvgCumulativeRegret\tAvgKnows\n")
+    @printf(io, "AvgCumulativeRegret\tAvgKnows\tAvgMSE\tAvgSEBest\n")
 
     # Generate data and print it to STDOUT in TSV format
     for algorithm in algorithms

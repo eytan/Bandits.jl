@@ -43,7 +43,8 @@ my_tests = [
     "04_algorithms/11_optimal_arm/02_significantly_worse_rejection.jl",
 
     "05_games/01_game.jl",
-    "05_games/02_stochastic.jl",
+    "05_games/02_data_queue.jl",
+    "05_games/03_stochastic.jl",
 
     "06_simulators/03_play_game.jl",
     "06_simulators/05_simulate.jl",

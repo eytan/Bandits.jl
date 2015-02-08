@@ -6,22 +6,36 @@ immutable CoreAverageGameStatistics <: AverageGameStatistics
     avg_instantaneous_regret::Vector{Float64}
     avg_cumulative_regret::Vector{Float64}
     avg_knows_best::Vector{Float64}
+    avg_mse::Vector{Float64}
+    avg_se_best::Vector{Float64}
 
     function CoreAverageGameStatistics(T::Integer)
         avg_reward = Array(Float64, T)
         fill!(avg_reward, 0.0)
+
         avg_instantaneous_regret = Array(Float64, T)
         fill!(avg_instantaneous_regret, 0.0)
+
         avg_cumulative_regret = Array(Float64, T)
         fill!(avg_cumulative_regret, 0.0)
+
         avg_knows_best = Array(Float64, T)
         fill!(avg_knows_best, 0.0)
+
+        avg_mse = Array(Float64, T)
+        fill!(avg_mse, 0.0)
+
+        avg_se_best = Array(Float64, T)
+        fill!(avg_se_best, 0.0)
+
         return new(
             T,
             avg_reward,
             avg_instantaneous_regret,
             avg_cumulative_regret,
             avg_knows_best,
+            avg_mse,
+            avg_se_best,
         )
     end
 end
@@ -36,14 +50,16 @@ function dump(
     for t in 1:statistics.T
         @printf(
             io,
-            "%s\t%d\t%d\t%f\t%f\t%f\t%f\n",
-            typeof(algorithm),
+            "%s\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
+            string(algorithm),
             bandit_id,
             t,
             statistics.avg_reward[t],
             statistics.avg_instantaneous_regret[t],
             statistics.avg_cumulative_regret[t],
             statistics.avg_knows_best[t],
+            statistics.avg_mse[t],
+            statistics.avg_se_best[t],
         )
     end
 
@@ -66,6 +82,9 @@ function update!(
             (1 - α) * avgs.avg_cumulative_regret[t] + α * obs.cumulative_regret[t]
         avgs.avg_knows_best[t] =
             (1 - α) * avgs.avg_knows_best[t] + α * obs.knows_best[t]
+        avgs.avg_mse[t] = (1 - α) * avgs.avg_mse[t] + α * obs.mse[t]
+        avgs.avg_se_best[t] =
+            (1 - α) * avgs.avg_se_best[t] + α * obs.se_best[t]
     end
 
     return

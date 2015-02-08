@@ -1,2 +1,4 @@
 rm demo.tsv
-time julia demo.jl
+time julia-0.3 demo.jl
+Rscript demo.R
+open .

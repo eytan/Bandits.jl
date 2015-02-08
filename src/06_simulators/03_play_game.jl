@@ -15,6 +15,10 @@ function play_game!(game::StochasticGame, statistics::SingleGameStatistics)
     # Determine the best arm for this bandit
     a_star = best_arm(bandit, MinimalContext(1))
 
+    # Learning occurs in batches
+    current_delay = delay(game)
+    next_update = current_delay
+
     # Play all T trials of the game
     for t in 1:T
         # Set up the agent's knowledge of the context
@@ -32,11 +36,26 @@ function play_game!(game::StochasticGame, statistics::SingleGameStatistics)
         # Calculate the regret implied by the agent's chosen arm
         g = regret(bandit, c, a)
 
-        # Agent learns from its observed reward before the next trial begins
-        learn!(algorithm, c, a, r)
+        # We store core data in a queue for batch updating
+        store!(game.queue, c, a, r)
+
+        # Agent learns from its observed reward if we are at a batch update
+        if t == next_update
+            for obs in 1:current_delay
+                learn!(
+                    algorithm,
+                    game.queue.c[obs],
+                    game.queue.a[obs],
+                    game.queue.r[obs]
+                )
+            end
+            current_delay = delay(game)
+            next_update += current_delay
+            clear!(game.queue)
+        end
 
         # We update the core simulation statistics for this game
-        update!(statistics, a_star, c, a, b, r, g)
+        update!(statistics, algorithm.learner, bandit, a_star, c, a, b, r, g)
     end
 
     # All changes to state occur via mutation, so we return nothing
