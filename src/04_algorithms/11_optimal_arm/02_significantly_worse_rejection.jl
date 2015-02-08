@@ -71,7 +71,7 @@ function learn!(
     )
 
     # if the min arm is significantly worse, nuke it.
-    if (sign(lower) != sign(upper))
+    if (sign(lower) == sign(upper))
         splice!(algorithm.active_arms, min_arm_index)
         algorithm.num_active_arms -= 1
         if algorithm.current_arm_index == min_arm_index
