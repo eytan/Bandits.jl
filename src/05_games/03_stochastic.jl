@@ -26,7 +26,7 @@ immutable StochasticGame{A <: Algorithm} <: Game
     end
 end
 
-function StochasticGame{A <: Algorithm}(algorithm::A, bandit, T, delay = 1)
+function StochasticGame{A <: Algorithm}(algorithm::A, bandit, T, delay)
     return StochasticGame{A}(algorithm, bandit, T, delay)
 end
 
