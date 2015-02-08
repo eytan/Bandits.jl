@@ -43,7 +43,8 @@ module Bandits
         Hedge,
         MOSS,
         ReinforcementComparison,
-        Pursuit
+        Pursuit,
+        SignificantlyWorseRejection
     export choose_arm
     include(joinpath("04_algorithms", "01_algorithm.jl"))
     include(joinpath("04_algorithms", "02_baseline", "01_random_choice.jl"))
@@ -62,6 +63,7 @@ module Bandits
     include(joinpath("04_algorithms", "09_moss", "01_standard.jl"))
     include(joinpath("04_algorithms", "10_rl", "01_comparison.jl"))
     include(joinpath("04_algorithms", "10_rl", "02_pursuit.jl"))
+    include(joinpath("04_algorithms", "11_optimal_arm", "02_significantly_worse_rejection.jl"))
 
 
     # Games
