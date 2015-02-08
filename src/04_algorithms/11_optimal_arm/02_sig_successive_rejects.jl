@@ -48,8 +48,8 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
     # the arm whose upper bound is the lowest
     arm_means = means(algorithm.learner)[algorithm.active_arms] 
     arm_stds = stds(algorithm.learner)[algorithm.active_arms]
-    arm_upper_bounds = arm_means + 1.16*arm_stds
-    arm_lower_bounds = arm_means - 1.16*arm_stds
+    arm_upper_bounds = arm_means + 1.96*arm_stds
+    arm_lower_bounds = arm_means - 1.96*arm_stds
     min_upper_bound, min_arm_index = findmin(arm_upper_bounds)
 
     # determine if the min arm is significantly worse, i.e., there
@@ -61,7 +61,7 @@ function choose_arm(algorithm::EstimatingBestArm, context::Context)
             ns[active_index], ns[min_arm_index],
             arm_stds[active_index]^2, arm_stds[min_arm_index]^2
         )
-        if p > 0.01
+        if p > 0.05
             min_is_significantly_worse = false
             break
         end
