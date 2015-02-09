@@ -8,24 +8,29 @@ immutable CoreAverageGameStatistics <: AverageGameStatistics
     avg_knows_best::Vector{Float64}
     avg_mse::Vector{Float64}
     avg_se_best::Vector{Float64}
+    sample_times::Vector{Int}
 
     function CoreAverageGameStatistics(T::Integer)
-        avg_reward = Array(Float64, T)
+        # Only retain statistics from sampled times
+        sample_times = 2.^(1:ifloor(log2(T)))
+        S = length(sample_times)
+
+        avg_reward = Array(Float64, S)
         fill!(avg_reward, 0.0)
 
-        avg_instantaneous_regret = Array(Float64, T)
+        avg_instantaneous_regret = Array(Float64, S)
         fill!(avg_instantaneous_regret, 0.0)
 
-        avg_cumulative_regret = Array(Float64, T)
+        avg_cumulative_regret = Array(Float64, S)
         fill!(avg_cumulative_regret, 0.0)
 
-        avg_knows_best = Array(Float64, T)
+        avg_knows_best = Array(Float64, S)
         fill!(avg_knows_best, 0.0)
 
-        avg_mse = Array(Float64, T)
+        avg_mse = Array(Float64, S)
         fill!(avg_mse, 0.0)
 
-        avg_se_best = Array(Float64, T)
+        avg_se_best = Array(Float64, S)
         fill!(avg_se_best, 0.0)
 
         return new(
@@ -36,6 +41,7 @@ immutable CoreAverageGameStatistics <: AverageGameStatistics
             avg_knows_best,
             avg_mse,
             avg_se_best,
+            sample_times,
         )
     end
 end
@@ -48,20 +54,20 @@ function dump(
     statistics::CoreAverageGameStatistics,
 )
     # Print out data in TSV format
-    for t in 1:statistics.T
+    for ind in 1:length(statistics.sample_times)
         @printf(
             io,
             "%s\t%d\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
             string(algorithm),
             bandit_id,
             delay,
-            t,
-            statistics.avg_reward[t],
-            statistics.avg_instantaneous_regret[t],
-            statistics.avg_cumulative_regret[t],
-            statistics.avg_knows_best[t],
-            statistics.avg_mse[t],
-            statistics.avg_se_best[t],
+            statistics.sample_times[ind],
+            statistics.avg_reward[ind],
+            statistics.avg_instantaneous_regret[ind],
+            statistics.avg_cumulative_regret[ind],
+            statistics.avg_knows_best[ind],
+            statistics.avg_mse[ind],
+            statistics.avg_se_best[ind],
         )
     end
 
@@ -75,18 +81,19 @@ function update!(
 )
     α = 1 / s
 
-    for t in 1:avgs.T
-        avgs.avg_reward[t] =
-            (1 - α) * avgs.avg_reward[t] + α * obs.reward[t]
-        avgs.avg_instantaneous_regret[t] =
-            (1 - α) * avgs.avg_instantaneous_regret[t] + α * obs.instantaneous_regret[t]
-        avgs.avg_cumulative_regret[t] =
-            (1 - α) * avgs.avg_cumulative_regret[t] + α * obs.cumulative_regret[t]
-        avgs.avg_knows_best[t] =
-            (1 - α) * avgs.avg_knows_best[t] + α * obs.knows_best[t]
-        avgs.avg_mse[t] = (1 - α) * avgs.avg_mse[t] + α * obs.mse[t]
-        avgs.avg_se_best[t] =
-            (1 - α) * avgs.avg_se_best[t] + α * obs.se_best[t]
+    for ind in 1:length(avgs.sample_times)
+        t = avgs.sample_times[ind]
+        avgs.avg_reward[ind] =
+            (1 - α) * avgs.avg_reward[ind] + α * obs.reward[t]
+        avgs.avg_instantaneous_regret[ind] =
+            (1 - α) * avgs.avg_instantaneous_regret[ind] + α * obs.instantaneous_regret[t]
+        avgs.avg_cumulative_regret[ind] =
+            (1 - α) * avgs.avg_cumulative_regret[ind] + α * obs.cumulative_regret[t]
+        avgs.avg_knows_best[ind] =
+            (1 - α) * avgs.avg_knows_best[ind] + α * obs.knows_best[t]
+        avgs.avg_mse[ind] = (1 - α) * avgs.avg_mse[ind] + α * obs.mse[t]
+        avgs.avg_se_best[ind] =
+            (1 - α) * avgs.avg_se_best[ind] + α * obs.se_best[t]
     end
 
     return
