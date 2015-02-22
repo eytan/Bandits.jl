@@ -24,12 +24,7 @@ function BootstrapMLELearner(R::Int64, μ₀::Float64, bootstrap_type=:half_samp
     else:
         error("unrecognized bootstrap type: ", bootstrap_type)
     end
-    BootstrapMLELearner(
-      b,
-      Array(StreamStats.Mean, 0),
-      R,
-      μ₀
-    )
+    BootstrapMLELearner(b, Array(StreamStats.Mean, 0), R, μ₀)
 end
 
 @doc """
@@ -57,7 +52,8 @@ function initialize!(learner::BootstrapMLELearner, K::Integer)
     resize!(learner.replicates, K)
     for a in 1:K
         learner.grand_means[a] = StreamStats.Mean(learner.μ₀, 0)
-        learner.replicates[a] = StreamStats.BernoulliBootstrap(StreamStats.Mean(learner.μ₀, 0))
+        learner.replicates[a] =
+            StreamStats.BernoulliBootstrap(StreamStats.Mean(learner.μ₀, 0), stat.R)
     end
 end
 
@@ -77,5 +73,5 @@ function Base.rand(learner::BootstrapLearner, a::Integer)
 end
 
 function Base.show(io::IO, learner::BootstrapLearner)
-    @printf(io, "BootstrapMLELearner(%f)", length(learner.replicates))
+    @printf(io, "BootstrapMLELearner(%u)", length(learner.replicates))
 end
