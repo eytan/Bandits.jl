@@ -1,20 +1,23 @@
 immutable MOSS{L <: Learner} <: Algorithm
     learner::L
+    num_plays::Vector{Integer}
 end
 
-MOSS(learner::Learner) = MOSS(learner, Array(Float64, 0))
+MOSS(learner::Learner) = MOSS(learner, Array(Integer, 0))
 
 function choose_arm(algorithm::MOSS, context::Context)
     μs = means(algorithm.learner)
     ns = counts(algorithm.learner)
 
     for a in 1:context.K
-        if ns[a] == 0
+        if algorithm.num_plays[a] == 0
+            algorithm.num_plays[a] += 1
             return a
         end
     end
 
-    max_score, chosen_a = -Inf, 0
+    # Pick a random arm with the maximum score
+    max_score, max_arms, num_max_arms = -Inf, Array(Integer, context.K), 1
     for a in 1:context.K
         score = μs[a] + sqrt(
             max(
@@ -24,11 +27,14 @@ function choose_arm(algorithm::MOSS, context::Context)
         )
         if score > max_score
             max_score = score
-            chosen_a = a
+            max_arms[1] = a
+            num_max_arms = 1
+        elseif score == max_score
+            num_max_arms += 1
+            max_arms[num_max_arms] = a
         end
     end
-
-    return chosen_a
+    return max_arms[rand(1:num_max_arms)]
 end
 
 function Base.show(io::IO, algorithm::MOSS)

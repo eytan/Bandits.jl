@@ -15,6 +15,7 @@ function initialize!(algorithm::Pursuit, K::Integer)
     return
 end
 
+# TODO: Modify to work with batched updates
 function choose_arm(algorithm::Pursuit, context::Context)
     if context.t > 1
         μs = means(algorithm.learner)

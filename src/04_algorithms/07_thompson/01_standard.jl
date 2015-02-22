@@ -3,16 +3,23 @@ immutable ThompsonSampling{L <: Learner} <: Algorithm
 end
 
 function choose_arm(algorithm::ThompsonSampling, context::Context)
-    max_score, chosen_a = -Inf, 0
+    max_score = -Inf
+    max_arms = Array(Integer, context.K)
+    num_max_arms = 1
+
     for a in 1:context.K
         score = rand(algorithm.learner, a)
         if score > max_score
             max_score = score
-            chosen_a = a
+            max_arms[1] = a
+            num_max_arms = 1
+        elseif score == max_score
+            num_max_arms += 1
+            max_arms[num_max_arms] = a
         end
     end
 
-    return chosen_a
+    return max_arms[rand(1:num_max_arms)]
 end
 
 function Base.show(io::IO, algorithm::ThompsonSampling)
