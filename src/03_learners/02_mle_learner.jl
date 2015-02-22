@@ -67,7 +67,7 @@ end
 Reset the MLELearner object for K arms.
 """ ->
 function initialize!(learner::MLELearner, K::Integer)
-    resize!(learner.replicates, K)
+    resize!(learner.stats, K)
     for a in 1:K
         learner.stats[a] = StreamStats.Variance(learner.μ₀, 0.0, learner.σ₀, 0)
     end

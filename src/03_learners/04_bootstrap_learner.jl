@@ -53,7 +53,7 @@ function initialize!(learner::BootstrapMLELearner, K::Integer)
     for a in 1:K
         learner.grand_means[a] = StreamStats.Mean(learner.μ₀, 0)
         learner.replicates[a] =
-            StreamStats.BernoulliBootstrap(StreamStats.Mean(learner.μ₀, 0), stat.R)
+            StreamStats.BernoulliBootstrap(StreamStats.Mean(learner.μ₀, 0), learner.R)
     end
 end
 
