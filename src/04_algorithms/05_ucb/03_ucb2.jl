@@ -4,6 +4,7 @@ immutable UCB2{L <: Learner} <: Algorithm
     r::Vector{Int64}
     current_arm::Vector{Int64}
     plays_left::Vector{Int64}
+    num_plays::Vector{Integer}
 end
 
 function UCB2(learner::Learner, α::Real)
@@ -13,6 +14,7 @@ function UCB2(learner::Learner, α::Real)
         Array(Int64, 0),
         [0],
         [0],
+        Array(Integer, 0)
     )
 end
 
@@ -30,7 +32,9 @@ end
 function initialize!(algorithm::UCB2, K::Integer)
     initialize!(algorithm.learner, K)
     resize!(algorithm.r, K)
+    resize!(algorithm.num_plays, K)
     fill!(algorithm.r, 0)
+    fill!(algorithm.num_plays, 0)
     algorithm.current_arm[1] = 0
     algorithm.plays_left[1] = 0
     return
@@ -43,7 +47,8 @@ function choose_arm(algorithm::UCB2, context::Context)
 
     # Sweep through all arms at the start
     for a in 1:context.K
-        if ns[a] == 0
+        if algorithm.num_plays[a] == 0
+            algorithm.num_plays[a] += 1
             return a
         end
     end
@@ -51,18 +56,24 @@ function choose_arm(algorithm::UCB2, context::Context)
     # Use preselected arm
     if algorithm.plays_left[1] > 0
         algorithm.plays_left[1] -= 1
+        algorithm.num_plays[algorithm.current_arm[1]] += 1
         return algorithm.current_arm[1]
     end
 
-    # Chose current arm afresh
-    max_score, chosen_a = -Inf, 0
+    # Pick a random arm with the maximum score
+    max_score, max_arms, num_max_arms = -Inf, Array(Integer, context.K), 1
     for a in 1:context.K
         score = μs[a] + a_func(α, context.t, algorithm.r[a])
         if score > max_score
             max_score = score
-            chosen_a = a
+            max_arms[1] = a
+            num_max_arms = 1
+        elseif max_score == score
+            num_max_arms += 1
+            max_arms[num_max_arms] = a
         end
     end
+    chosen_a = max_arms[rand(1:num_max_arms)]
 
     # Precommit to playing arm n times.
     # We use up the first play immediately.
@@ -73,6 +84,7 @@ function choose_arm(algorithm::UCB2, context::Context)
         τ_func(α, algorithm.r[chosen_a]) - 1
     )
     algorithm.r[chosen_a] += 1
+    algorithm.num_plays[chosen_a] += 1
 
     return chosen_a
 end
