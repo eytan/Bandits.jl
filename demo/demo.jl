@@ -21,7 +21,7 @@ algorithms = [
     # AnnealingSoftmax(learner, 1.0),
     UCB1(learner),
     UCB1Tuned(learner),
-    UCB2(learner, 0.1),
+    # UCB2(learner, 0.1),
     UCBV(learner, 1.0, 1.0, 1.2),
     # Exp3(learner, 0.01),
     # Exp3(learner, 0.1),

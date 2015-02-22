@@ -5,6 +5,12 @@ end
 
 MOSS(learner::Learner) = MOSS(learner, Array(Integer, 0))
 
+function initialize!(algorithm::MOSS, K::Integer)
+    initialize!(algorithm.learner, K)
+    resize!(algorithm.num_plays, K)
+    fill!(algorithm.num_plays, 0)
+end
+
 function choose_arm(algorithm::MOSS, context::Context)
     μs = means(algorithm.learner)
     ns = counts(algorithm.learner)

@@ -1,3 +1,7 @@
+library(ggplot2)
+
+# quartz()
+
 tmp <- read.csv("demo.tsv", sep = "\t")
 
 ggplot(
@@ -18,14 +22,16 @@ ggplot(
     scale_x_log10() +
     scale_y_log10() +
     facet_grid(Delay ~ .)
+
 ggsave("regret_mse_tradeoff.jpg", height = 8, width = 12)
 
 ggplot(
-    subset(tmp, T > 3),
+    subset(tmp, T > 3 & T %% 5 == 0),
     aes(x = T, y = AvgReward, color = Algorithm)
 ) +
     geom_line() +
     facet_grid(Delay ~ .)
+
 ggsave("average_reward.jpg", height = 8, width = 12)
 
 ggplot(
@@ -34,6 +40,7 @@ ggplot(
 ) +
     geom_line() +
     facet_grid(Delay ~ .)
+
 ggsave("average_instantaneous_regret.jpg", height = 8, width = 12)
 
 ggplot(
@@ -42,6 +49,7 @@ ggplot(
 ) +
     geom_line() +
     facet_grid(Delay ~ .)
+
 ggsave("average_cumulative_regret.jpg", height = 8, width = 12)
 
 ggplot(
@@ -50,6 +58,7 @@ ggplot(
 ) +
     geom_line() +
     facet_grid(Delay ~ .)
+
 ggsave("average_best_arm_identified.jpg", height = 8, width = 12)
 
 ggplot(
@@ -59,6 +68,7 @@ ggplot(
     geom_line() +
     scale_y_log10() +
     facet_grid(Delay ~ .)
+
 ggsave("average_mse.jpg", height = 8, width = 12)
 
 ggplot(
@@ -68,4 +78,5 @@ ggplot(
     geom_line() +
     scale_y_log10() +
     facet_grid(Delay ~ .)
+
 ggsave("average_se_best.jpg", height = 8, width = 12)
