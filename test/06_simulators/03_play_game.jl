@@ -14,6 +14,7 @@ module TestPlayGame
             ]
         ),
         T,
+        1,
     )
     @test isa(game, StochasticGame)
 

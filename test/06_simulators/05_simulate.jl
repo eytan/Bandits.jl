@@ -23,5 +23,5 @@ module TestSimulator
     S = 100
 
     io = IOBuffer()
-    simulate(algorithms, bandits, T, S, io)
+    simulate(algorithms, bandits, T, S, [1], io)
 end

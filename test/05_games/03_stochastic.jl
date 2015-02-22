@@ -12,6 +12,7 @@ module TestStochasticGame
             ]
         ),
         50,
+        1,
     )
     @test isa(game, StochasticGame)
 end
