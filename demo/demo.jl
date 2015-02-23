@@ -26,7 +26,7 @@ algorithms = [
     # Exp3(learner, 0.01),
     # Exp3(learner, 0.1),
     ThompsonSampling(BetaLearner(0.5, 0.5)),
-    ThompsonSampling(BootstrapMLELearner(500, 0.5)),
+    # ThompsonSampling(BootstrapMLELearner(500, 0.5)),
     # Hedge(learner, 0.1),
     MOSS(learner),
     # ReinforcementComparison(learner, 0.1, 0.1, 1.0),
