@@ -1,16 +1,19 @@
+using StreamStats
+import Base.mean, Base.std
+
+import StreamStats.update!
+
 @doc """
 A MLELearner object stores the online estimated mean and variance of all
 arms. Arms with zero counts use a default mean and standard deviation.
 """ ->
-immutable MLELearner <: Learner
-    ns::Vector{Int64}
-    oldMs::Vector{Float64}
-    newMs::Vector{Float64}
-    Ss::Vector{Float64}
-    μs::Vector{Float64}
-    σs::Vector{Float64}
+type MLELearner <: Learner
+    stats::Vector{StreamStats.Variance}
     μ₀::Float64
     σ₀::Float64
+    nobs::Vector{Integer}
+    means::Vector{Float64}
+    stds::VecOrMat{Float64}
 end
 
 @doc """
@@ -19,47 +22,76 @@ deviation.
 """ ->
 function MLELearner(μ₀::Real, σ₀::Real)
     return MLELearner(
-      Array(Int64, 0),
+      Array(StreamStats.Variance, 0),
+      μ₀,
+      σ₀,
+      Array(Integer, 0),
       Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      float64(μ₀),
-      float64(σ₀),
+      Array(Float64, 0)
     )
 end
 
 @doc """
+Return the count for an arm.
+""" ->
+counts(learner::MLELearner, a::Int64) = nobs(learner.stats[a])
+
+@doc """
 Return the counts for each arm.
 """ ->
-counts(learner::MLELearner) = learner.ns
+function counts(learner::MLELearner)
+  for a in 1:length(learner.stats)
+    learner.nobs[a] = nobs(learner.stats[a])
+  end
+  return learner.nobs
+end
 
 @doc """
-Return the means for each arm.
+Return the estimated mean of an arm.
 """ ->
-means(learner::MLELearner) = learner.μs
+function mean(learner::MLELearner, a::Int64)
+    return mean(learner.stats[a])
+end
 
 @doc """
-Return the standard deviations for each arm.
+Return the estimated means for each arms.
 """ ->
-stds(learner::MLELearner) = learner.σs
+function means(learner::MLELearner)
+  for a in 1:length(learner.stats)
+    learner.means[a] = mean(learner.stats[a])
+  end
+  return learner.means
+end
+
+@doc """
+Return the estimated standard deviation of an arm.
+""" ->
+function std(learner::MLELearner, a::Int64)
+    return std(learner.stats[a])
+end
+
+@doc """
+Return the estimated standard deviations for each arm.
+""" ->
+function stds(learner::MLELearner)
+  for a in 1:length(learner.stats)
+    learner.stds[a] = std(learner.stats[a])
+  end
+  return learner.stds
+end
 
 @doc """
 Reset the MLELearner object for K arms.
 """ ->
 function initialize!(learner::MLELearner, K::Integer)
-    resize!(learner.ns, K)
-    resize!(learner.oldMs, K)
-    resize!(learner.newMs, K)
-    resize!(learner.Ss, K)
-    resize!(learner.μs, K)
-    resize!(learner.σs, K)
+    resize!(learner.stats, K)
+    resize!(learner.nobs, K)
+    resize!(learner.means, K)
+    resize!(learner.stds, K)
 
-    fill!(learner.ns, 0)
-    fill!(learner.μs, learner.μ₀)
-    fill!(learner.σs, learner.σ₀)
-
+    for a in 1:K
+        learner.stats[a] = StreamStats.Variance(learner.μ₀, 0.0, learner.σ₀, 0)
+    end
     return
 end
 
@@ -72,21 +104,7 @@ function learn!(
     a::Integer,
     r::Real,
 )
-    learner.ns[a] += 1
-    nᵢ = learner.ns[a]
-
-    if nᵢ == 1
-        learner.oldMs[a] = r
-        learner.Ss[a] = 0.0
-        learner.μs[a] = r
-    else
-        learner.newMs[a] = learner.oldMs[a] + (r - learner.oldMs[a]) / nᵢ
-        learner.Ss[a] += (r - learner.oldMs[a]) * (r - learner.newMs[a])
-        learner.oldMs[a] = learner.newMs[a]
-        learner.μs[a] = learner.newMs[a]
-        learner.σs[a] = sqrt(learner.Ss[a] / (nᵢ - 1))
-    end
-
+    update!(learner.stats[a], r)
     return
 end
 

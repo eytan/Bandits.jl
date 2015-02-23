@@ -32,5 +32,5 @@ module TestThompsonSampling
     end
 
     test_thompson_sampling_with_learner(BetaLearner())
-    test_thompson_sampling_with_learner(BootstrapMLELearner(100, 0.5, 0.25))
+    test_thompson_sampling_with_learner(BootstrapMLELearner(100, 0.5, :half_sample))
 end
