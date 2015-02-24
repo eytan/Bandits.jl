@@ -3,9 +3,9 @@ A StochasticGame type represents a Game between an Algorithm and a
 StochasticBandit. This simplifies many calculations, such as the calculation of
 regret.
 """ ->
-immutable StochasticGame{A <: Algorithm} <: Game
+immutable StochasticGame{A <: Algorithm, B <: Union(StochasticBandit, EmpiricalBandit)} <: Game
     algorithm::A
-    bandit::StochasticBandit
+    bandit::B
     T::Int
     delay::Int
     queue::DataQueue{StochasticContext}
@@ -26,8 +26,8 @@ immutable StochasticGame{A <: Algorithm} <: Game
     end
 end
 
-function StochasticGame{A <: Algorithm}(algorithm::A, bandit, T, delay)
-    return StochasticGame{A}(algorithm, bandit, T, delay)
+function StochasticGame{A <: Algorithm, B <: Union(StochasticBandit, EmpiricalBandit)}(algorithm::A, bandit::B, T, delay)
+    return StochasticGame{A, B}(algorithm, bandit, T, delay)
 end
 
 function delay(game::StochasticGame)
