@@ -1,5 +1,6 @@
 module Bandits
     using NumericExtensions
+    import StatsBase
     using Distributions
     using Docile
     @docstrings
@@ -11,11 +12,12 @@ module Bandits
     include(joinpath("01_contexts", "03_stochastic_context.jl"))
 
     # Bandit
-    export Bandit, StochasticBandit, ContextualBandit
+    export Bandit, StochasticBandit, ContextualBandit, EmpiricalBandit
     export draw, regret, count_arms, best_arm
     include(joinpath("02_bandits", "01_bandit.jl"))
     include(joinpath("02_bandits", "02_stochastic_bandit.jl"))
     include(joinpath("02_bandits", "03_contextual_bandit.jl"))
+    include(joinpath("02_bandits", "04_empirical_bandit.jl"))
 
     # Learners
     export Learner, MLELearner, BetaLearner, BootstrapLearner, BootstrapMLELearner
