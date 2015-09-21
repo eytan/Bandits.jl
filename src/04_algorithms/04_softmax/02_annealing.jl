@@ -17,7 +17,7 @@ temperature.
 function AnnealingSoftmax(learner::Learner, τ₀::Real)
     return AnnealingSoftmax(
         learner,
-        float64(τ₀),
+        Float64(τ₀),
         Array(Float64, 0),
         Array(Float64, 0),
     )

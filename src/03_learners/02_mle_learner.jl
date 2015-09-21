@@ -25,8 +25,8 @@ function MLELearner(μ₀::Real, σ₀::Real)
       Array(Float64, 0),
       Array(Float64, 0),
       Array(Float64, 0),
-      float64(μ₀),
-      float64(σ₀),
+      Float64(μ₀),
+      Float64(σ₀),
     )
 end
 

@@ -8,7 +8,7 @@ end
 
 Hedge(learner::Learner, η::Real) = Hedge(
     learner,
-    float64(η),
+    Float64(η),
     Array(Float64, 0),
     Array(Float64, 0),
     Array(Float64, 0),

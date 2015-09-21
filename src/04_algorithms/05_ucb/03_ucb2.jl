@@ -9,14 +9,14 @@ end
 function UCB2(learner::Learner, α::Real)
     return UCB2(
         learner,
-        float64(α),
+        Float64(α),
         Array(Int64, 0),
         [0],
         [0],
     )
 end
 
-τ_func(α::Real, r::Integer) = iceil((1 + α)^r)
+τ_func(α::Real, r::Integer) = ceil(Integer, (1 + α)^r)
 
 function a_func(α::Real, t::Integer, r::Integer)
     return sqrt(

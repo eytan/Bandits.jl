@@ -15,7 +15,7 @@ function UCBV(
     c::Real = 1.0,
     ζ::Real = 1.2,
 )
-    return UCBV(learner, float64(b), float64(c), float64(ζ))
+    return UCBV(learner, Float64(b), Float64(c), Float64(ζ))
 end
 
 function initialize!(algorithm::UCBV, K::Integer)

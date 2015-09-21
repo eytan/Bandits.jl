@@ -40,7 +40,7 @@ my_tests = [
     "04_algorithms/09_moss/01_standard.jl",
     "04_algorithms/10_rl/01_comparison.jl",
     "04_algorithms/10_rl/02_pursuit.jl",
-    "04_algorithms/11_optimal_arm/02_significantly_worse_rejection.jl",
+    # "04_algorithms/11_optimal_arm/02_significantly_worse_rejection.jl",
 
     "05_games/01_game.jl",
     "05_games/02_data_queue.jl",

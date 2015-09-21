@@ -1,8 +1,9 @@
+__precompile__(false)
+
 module Bandits
-    using NumericExtensions
     using Distributions
-    using Docile
-    @docstrings
+    using StatsFuns
+    # using HypothesisTests
 
     # Contexts
     export Context, MinimalContext, StochasticContext
@@ -63,8 +64,7 @@ module Bandits
     include(joinpath("04_algorithms", "09_moss", "01_standard.jl"))
     include(joinpath("04_algorithms", "10_rl", "01_comparison.jl"))
     include(joinpath("04_algorithms", "10_rl", "02_pursuit.jl"))
-    include(joinpath("04_algorithms", "11_optimal_arm", "02_significantly_worse_rejection.jl"))
-
+    # include(joinpath("04_algorithms", "11_optimal_arm", "02_significantly_worse_rejection.jl"))
 
     # Games
     export Game, StochasticGame

@@ -1,9 +1,8 @@
-using HypothesisTests
 #### SignificantlyWorseRejection algorithm
 
 # Explores all arms round robin, and drops arms whose upper CI
 # is lower than the lower CI of all other arms.
-    
+
 
 # NOTE: there may be an issue with false discoveries since we are
 # continuously checking for statistically significant differences.
@@ -46,7 +45,7 @@ function learn!(
     if algorithm.num_active_arms == 1
         return  # nothing to do
     end
-    
+
 
     # TODO: replace all CI computations with the bootstrap
 
@@ -54,7 +53,7 @@ function learn!(
     # the min arm, with the lowest upper bound, and
     # the max arm, with the greatest lower bound.
 
-    arm_means = means(algorithm.learner)[algorithm.active_arms] 
+    arm_means = means(algorithm.learner)[algorithm.active_arms]
     arm_stds = stds(algorithm.learner)[algorithm.active_arms]
     ns = counts(algorithm.learner)[algorithm.active_arms]
 

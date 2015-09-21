@@ -1,14 +1,14 @@
-@doc """
-A StochasticBandit object represents exactly what the literature calls a
-"stochastic bandit", which is a bandit that has a finite number of arms, each
-of which has an associated stationary, univariate distribution over the
-non-negative reals.
-
-Because of stationarity, we can cache the maximum reward associated with
-any arm. Based on this maximum reward, we can also cache the pseudo-regret
-associated with choosing any particular arm. The complete object contains
-all of this cached information.
-""" ->
+# @doc """
+# A StochasticBandit object represents exactly what the literature calls a
+# "stochastic bandit", which is a bandit that has a finite number of arms, each
+# of which has an associated stationary, univariate distribution over the
+# non-negative reals.
+#
+# Because of stationarity, we can cache the maximum reward associated with
+# any arm. Based on this maximum reward, we can also cache the pseudo-regret
+# associated with choosing any particular arm. The complete object contains
+# all of this cached information.
+# """ ->
 immutable StochasticBandit{D <: UnivariateDistribution} <: ProbabilisticBandit
     arms::Vector{D}
     means::Vector{Float64}
@@ -16,7 +16,7 @@ immutable StochasticBandit{D <: UnivariateDistribution} <: ProbabilisticBandit
     max_reward::Float64
     best_arm::Int64
 
-    function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D})
+    function StochasticBandit(arms::Vector{D})
         K = length(arms)
         means = Array(Float64, K)
         pseudo_regrets = Array(Float64, K)

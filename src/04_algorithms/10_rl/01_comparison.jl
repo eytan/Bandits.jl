@@ -16,9 +16,9 @@ function ReinforcementComparison(
 )
     return ReinforcementComparison(
         learner,
-        float64(α),
-        float64(β),
-        float64(r0),
+        Float64(α),
+        Float64(β),
+        Float64(r0),
         Array(Float64, 1),
         Array(Float64, 0),
         Array(Float64, 0),

@@ -15,7 +15,7 @@ Construct a Softmax object given a learner and a temperature.
 function Softmax(learner::Learner, τ::Real)
     return Softmax(
         learner,
-        float64(τ),
+        Float64(τ),
         Array(Float64, 0),
         Array(Float64, 0),
     )

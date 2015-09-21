@@ -5,7 +5,7 @@ immutable Pursuit{L <: Learner} <: Algorithm
 end
 
 function Pursuit(learner::Learner, β::Real)
-    return Pursuit(learner, float64(β), Array(Float64, 0))
+    return Pursuit(learner, Float64(β), Array(Float64, 0))
 end
 
 function initialize!(algorithm::Pursuit, K::Integer)

@@ -19,8 +19,8 @@ function BetaLearner(α₀::Float64 = 0.5, β₀::Float64 = 0.5)
     return BetaLearner(
       Array(Float64, 0),
       Array(Float64, 0),
-      float64(α₀),
-      float64(β₀),
+      Float64(α₀),
+      Float64(β₀),
       Array(Int64, 0),
       Array(Float64, 0),
       Array(Float64, 0),
