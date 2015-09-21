@@ -1,3 +1,5 @@
+library(ggplot2)
+
 tmp <- read.csv("demo.tsv", sep = "\t")
 
 ggplot(

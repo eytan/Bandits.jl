@@ -11,7 +11,6 @@ learner = MLELearner(0.5, 0.25)
 
 algorithms = [
     RandomChoice(learner),
-    SignificantlyWorseRejection(learner),
     EpsilonGreedy(learner, 0.01),
     EpsilonGreedy(learner, 0.1),
     # AnnealingEpsilonGreedy(learner),
