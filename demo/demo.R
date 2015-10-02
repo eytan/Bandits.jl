@@ -46,12 +46,14 @@ ggplot(
     facet_grid(Delay ~ .)
 ggsave("average_cumulative_regret.jpg", height = 8, width = 12)
 
+max.y <- max(subset(tmp, T==max(tmp$T))$AvgKnows)
 ggplot(
     subset(tmp, T > 3),
     aes(x = T, y = AvgKnows, color = Algorithm)
 ) +
     geom_line() +
-    facet_grid(Delay ~ .)
+    facet_grid(Delay ~ .) +
+    ylim(0, min(1,max.y))
 ggsave("average_best_arm_identified.jpg", height = 8, width = 12)
 
 ggplot(
