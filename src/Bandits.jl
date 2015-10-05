@@ -41,6 +41,7 @@ module Bandits
         UCBV,
         Exp3,
         ThompsonSampling,
+        TopKThompsonSampling,
         Hedge,
         MOSS,
         ReinforcementComparison,
@@ -60,6 +61,7 @@ module Bandits
     include(joinpath("04_algorithms", "05_ucb", "04_ucb_v.jl"))
     include(joinpath("04_algorithms", "06_exp", "01_exp3.jl"))
     include(joinpath("04_algorithms", "07_thompson", "01_standard.jl"))
+    include(joinpath("04_algorithms", "07_thompson", "02_top_k.jl"))
     include(joinpath("04_algorithms", "08_hedge", "01_standard.jl"))
     include(joinpath("04_algorithms", "09_moss", "01_standard.jl"))
     include(joinpath("04_algorithms", "10_rl", "01_comparison.jl"))
