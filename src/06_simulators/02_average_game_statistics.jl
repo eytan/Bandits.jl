@@ -1,7 +1,9 @@
 abstract AverageGameStatistics
 
 immutable CoreAverageGameStatistics <: AverageGameStatistics
+    S::Int
     T::Int
+    games::Vector{CoreSingleGameStatistics}
     avg_reward::Vector{Float64}
     avg_instantaneous_regret::Vector{Float64}
     avg_cumulative_regret::Vector{Float64}
@@ -9,7 +11,8 @@ immutable CoreAverageGameStatistics <: AverageGameStatistics
     avg_mse::Vector{Float64}
     avg_se_best::Vector{Float64}
 
-    function CoreAverageGameStatistics(T::Integer)
+    function CoreAverageGameStatistics(S::Integer, T::Integer)
+        games = Array(CoreSingleGameStatistics, S)
         avg_reward = Array(Float64, T)
         fill!(avg_reward, 0.0)
 
@@ -29,7 +32,9 @@ immutable CoreAverageGameStatistics <: AverageGameStatistics
         fill!(avg_se_best, 0.0)
 
         return new(
+            S,
             T,
+            games,
             avg_reward,
             avg_instantaneous_regret,
             avg_cumulative_regret,
@@ -47,8 +52,25 @@ function dump(
     delay::Integer,
     statistics::CoreAverageGameStatistics,
 )
+    S = statistics.S
     # Print out data in TSV format
     for t in 1:statistics.T
+       ## Here is my first attempt at extracting distributional statistics
+       # on algorithm performance metrics. There are a few things that seem
+       # less than ideal:
+       # (1) Use of the list comprehension seems not very efficient
+       # (2) It would be awkward to write this out for every metric, but maybe
+       #     not a huge deal
+       # (3) if we add 7 more distributional statistics for every metric
+       #     that would be 7x6 columns.  This seems like it would be annoying
+       #     to write out.  I wonder if a long format would work better, like
+       #       algorithm,bandit_id,delay_t,metric,avg,min,max,q025,q25,q75,q975
+       metrics = [(statistics.games[s]).knows_best[t] for s in 1:S]
+       metrics_quantiles = quantile(metrics, [0.025, 0.25, 0.5, 0.75, 0.975])
+       # max and min are not defined for booleans, interestingly enough, so
+       # the following line won't work for knows_best.
+       #metrics_min, metrics_max = min(metrics), max(metrics)
+
         @printf(
             io,
             "%s\t%d\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
@@ -71,9 +93,10 @@ end
 function update!(
     avgs::CoreAverageGameStatistics,
     obs::CoreSingleGameStatistics,
-    s::Integer,
+    s::Integer
 )
-    α = 1 / s
+    α = 1 / avgs.S
+    avgs.games[s] = obs
 
     for t in 1:avgs.T
         avgs.avg_reward[t] =

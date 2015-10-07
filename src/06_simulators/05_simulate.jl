@@ -7,7 +7,7 @@ function simulate(
     io::IO = STDOUT,
 )
     game_statistics = CoreSingleGameStatistics(T)
-    avg_game_statistics = CoreAverageGameStatistics(T)
+    avg_game_statistics = CoreAverageGameStatistics(S, T)
 
     # Print out a header to STDOUT in TSV format
     @printf(io, "Algorithm\tBandit\tDelay\tT\tAvgReward\tAvgInstantaneousRegret\t")
