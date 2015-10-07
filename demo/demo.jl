@@ -5,7 +5,7 @@ T = 2_000
 
 # Number of simulated games per algorithm/bandit pair
 # Set this below 10,000 to get results very quickly
-S = 5_000
+S = 500
 
 learner = MLELearner(0.5, 0.25)
 
