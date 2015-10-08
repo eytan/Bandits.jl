@@ -3,17 +3,28 @@ abstract AverageGameStatistics
 immutable CoreAverageGameStatistics <: AverageGameStatistics
     S::Int
     T::Int
+    step_size::Int
     games::Vector{CoreSingleGameStatistics}
 
-    function CoreAverageGameStatistics(S::Integer, T::Integer)
+    function CoreAverageGameStatistics(
+      S::Integer,
+      T::Integer,
+      step_size::Integer,
+    )
         games = Array(CoreSingleGameStatistics, S)
 
-        return new(
-            S,
-            T,
-            games
-        )
+        return new(S, T, step_size, games)
     end
+end
+
+function update!(
+    avgs::CoreAverageGameStatistics,
+    obs::CoreSingleGameStatistics,
+    s::Integer,
+)
+    α = 1 / s
+    avgs.games[s] = deepcopy(obs)
+    return
 end
 
 function dump(
@@ -25,7 +36,7 @@ function dump(
 )
     S = statistics.S
     # Print out data in TSV format
-    for t in 1:statistics.T
+    for t in 1:statistics.step_size:statistics.T
        # we assume all games have same fields, and use the first to get names
        fields = fieldnames(statistics.games[1])
        for metric = fields
@@ -55,14 +66,4 @@ function dump(
       end
     end
   return
-end
-
-function update!(
-    avgs::CoreAverageGameStatistics,
-    obs::CoreSingleGameStatistics,
-    s::Integer,
-)
-    α = 1 / s
-    avgs.games[s] = deepcopy(obs)
-    return
 end
