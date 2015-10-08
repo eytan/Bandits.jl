@@ -31,6 +31,13 @@ function learn!(
 end
 
 @doc """
+Update the probability of choosing each arm.
+""" ->
+function update_policy!(algorithm::Algorithm, context::Context)
+    error("update_policy!(algorithm, context) is not implemented abstractly")
+end
+
+@doc """
 Choose one of K arms given the current context.
 """ ->
 function choose_arm(algorithm::Algorithm, context::Context)

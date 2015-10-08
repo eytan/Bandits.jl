@@ -32,6 +32,19 @@ function initialize!(algorithm::Softmax, K::Integer)
 end
 
 @doc """
+Update policy based on empirical means and temperature.
+""" ->
+function update_policy!(algorithm::Softmax, context::Context)
+    μs = means(algorithm.learner)
+    τ = algorithm.τ
+    for i in 1:context.K
+        algorithm.tmeans[i] = μs[i] / τ
+    end
+    softmax!(algorithm.probs, algorithm.tmeans)
+    return
+end
+
+@doc """
 Select an arm according to the softmax rule. Recompute temperature adjusted
 means to make sure that the softmax selection probabilities are correct.
 """ ->

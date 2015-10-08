@@ -6,6 +6,24 @@ immutable DecreasingEpsilonGreedy{L <: Learner} <: Algorithm
     learner::L
     c::Float64
     d::Float64
+    policy::Vector{Float64}
+end
+
+@doc """
+Update policy based on belief about best arm.
+""" ->
+function update_policy!(algorithm::DecreasingEpsilonGreedy, context::Context)
+    ε = min(1.0, (algorithm.c * context.K) / (algorithm.d^2 * context.t))
+    K = length(algorithm.policy)
+    a_star = preferred_arm(algorithm, context)
+    for i in 1:K
+        if i != a_star
+            algorithm.policy[i] = ε / K
+        else
+            algorithm.policy[i] = (1 - ε) + ε / K
+        end
+    end
+    return
 end
 
 @doc """
