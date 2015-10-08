@@ -55,48 +55,44 @@ function dump(
     S = statistics.S
     # Print out data in TSV format
     for t in 1:statistics.T
-       ## Here is my first attempt at extracting distributional statistics
-       # on algorithm performance metrics. There are a few things that seem
-       # less than ideal:
-       # (1) Use of the list comprehension seems not very efficient
-       # (2) It would be awkward to write this out for every metric, but maybe
-       #     not a huge deal
-       # (3) if we add 7 more distributional statistics for every metric
-       #     that would be 7x6 columns.  This seems like it would be annoying
-       #     to write out.  I wonder if a long format would work better, like
-       #       algorithm,bandit_id,delay_t,metric,avg,min,max,q025,q25,q75,q975
-       metrics = [(statistics.games[s]).knows_best[t] for s in 1:S]
-       metrics_quantiles = quantile(metrics, [0.025, 0.25, 0.5, 0.75, 0.975])
-       # max and min are not defined for booleans, interestingly enough, so
-       # the following line won't work for knows_best.
-       #metrics_min, metrics_max = min(metrics), max(metrics)
-
-        @printf(
-            io,
-            "%s\t%d\t%d\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
-            string(algorithm),
-            bandit_id,
-            delay,
-            t,
-            statistics.avg_reward[t],
-            statistics.avg_instantaneous_regret[t],
-            statistics.avg_cumulative_regret[t],
-            statistics.avg_knows_best[t],
-            statistics.avg_mse[t],
-            statistics.avg_se_best[t],
-        )
+       # we assume all games have same fields, and use the first to get names
+       fields = fieldnames(statistics.games[1])
+       for metric = fields
+         if metric != :T && metric != :chosen_arm
+           vals = [Float64(getfield(statistics.games[s], metric)[t]) for s in 1:S]
+           val_quantiles = quantile(vals, [0.025, 0.25, 0.5, 0.75, 0.975])
+           min_val, max_val = minimum(vals), maximum(vals)
+           mean_val = mean(vals)
+           @printf(
+              io,
+              "%s\t%d\t%d\t%d\t%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+              string(algorithm),
+              bandit_id,
+              delay,
+              t,
+              string(metric),
+              mean_val,
+              min_val,
+              val_quantiles[1],
+              val_quantiles[2],
+              val_quantiles[3],
+              val_quantiles[4],
+              val_quantiles[5],
+              max_val,
+           )
+        end
+      end
     end
-
-    return
+  return
 end
 
 function update!(
     avgs::CoreAverageGameStatistics,
     obs::CoreSingleGameStatistics,
-    s::Integer
+    s::Integer,
 )
-    α = 1 / avgs.S
-    avgs.games[s] = obs
+    α = 1 / s
+    avgs.games[s] = deepcopy(obs)
 
     for t in 1:avgs.T
         avgs.avg_reward[t] =
