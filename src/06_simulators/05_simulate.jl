@@ -7,11 +7,11 @@ function simulate(
     io::IO = STDOUT,
 )
     game_statistics = CoreSingleGameStatistics(T)
-    avg_game_statistics = CoreAverageGameStatistics(T)
+    avg_game_statistics = CoreAverageGameStatistics(S, T)
 
     # Print out a header to STDOUT in TSV format
-    @printf(io, "Algorithm\tBandit\tDelay\tT\tAvgReward\tAvgInstantaneousRegret\t")
-    @printf(io, "AvgCumulativeRegret\tAvgKnows\tAvgMSE\tAvgSEBest\n")
+    @printf(io, "algorithm\tbandit\tdelay\tT\tmetric")
+    @printf(io, "\tmean\tmin\tq025\tq25\tq50\tq75\tq975\tmax\n")
 
     # Generate data and print it to STDOUT in TSV format
     for delay in delays
