@@ -18,6 +18,8 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
     T::Int
     reward::Vector{Float64}
     instantaneous_regret::Vector{Float64}
+    step_size::Int
+    steps::Int
     cumulative_regret::Vector{Float64}
     chosen_arm::Vector{Int}
     chose_best::BitVector
@@ -25,15 +27,6 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
     mse::Vector{Float64}
     se_best::Vector{Float64}
 
-    function CoreSingleGameStatistics(T::Integer)
-        reward = Array(Float64, T)
-        instantaneous_regret = Array(Float64, T)
-        cumulative_regret = Array(Float64, T)
-        chosen_arm = Array(Int, T)
-        chose_best = BitArray(T)
-        knows_best = BitArray(T)
-        mse = Array(Float64, T)
-        se_best = Array(Float64, T)
         return new(
             T,
             reward,
@@ -62,23 +55,13 @@ function update!(
     r::Real,
     g::Real,
 )
-    statistics.reward[c.t] = r
-    statistics.instantaneous_regret[c.t] = g
-    if c.t == 1
-        statistics.cumulative_regret[c.t] = g
     else
-        statistics.cumulative_regret[c.t] = statistics.cumulative_regret[c.t - 1] + g
     end
-    statistics.chosen_arm[c.t] = a
-    statistics.chose_best[c.t] = a_star == a
-    statistics.knows_best[c.t] = a_star == b
     learner_ms = means(learner)
     bandit_ms = means(bandit)
     mse = 0.0
     for a in 1:c.K
         mse += (learner_ms[a] - bandit_ms[a])^2
     end
-    statistics.mse[c.t] = mse
-    statistics.se_best[c.t] = (learner_ms[a_star] - bandit_ms[a_star])^2
     return
 end

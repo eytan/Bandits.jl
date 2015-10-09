@@ -1,7 +1,7 @@
 using Bandits, Distributions
 
 # Number of trials in a game
-T = 4_000_001
+T = 4_000
 
 # Number of simulated games per algorithm/bandit pair
 # Set this below 10,000 to get results very quickly
@@ -10,7 +10,6 @@ S = 100
 learner = MLELearner(0.5, 0.25)
 
 algorithms = [
-    RandomChoice(learner),
     #EpsilonGreedy(learner, 0.01),
     #EpsilonGreedy(learner, 0.1),
     # AnnealingEpsilonGreedy(learner),
@@ -19,13 +18,14 @@ algorithms = [
     #Softmax(learner, 0.1),
     # AnnealingSoftmax(learner, 1.0),
     #UCB1(learner),
-    UCB1Tuned(learner),
+    #UCB1Tuned(learner),
     # UCB2(learner, 0.1),
     # UCBV(learner, 1.0, 1.0, 1.2),
     # Exp3(learner, 0.01),
     # Exp3(learner, 0.1),
     ThompsonSampling(BetaLearner(0.5, 0.5)),
-    TopKThompsonSampling(BetaLearner(0.5, 0.5), 2),
+    RandomChoice(learner),
+  #  TopKThompsonSampling(BetaLearner(0.5, 0.5), 2),
     #TopKThompsonSampling(BetaLearner(0.5, 0.5), 3)
     # Hedge(learner, 0.1),
     # MOSS(learner),
@@ -41,7 +41,8 @@ bandits = [StochasticBandit([Bernoulli(p) for p in [0.000556, 0.000558, 0.000594
 #bandits = [StochasticBandit([Bernoulli(p) for p in [0.0173564753004005,0.02,0.0276338514680484,0.0226876090750436,0.0371681415929204,0.0219981668194317,0.0304709141274238,0.0188857412653447]]),]
 #bandits = [StochasticBandit([Bernoulli(p) for p in [0.02589,0.02779,0.03235,0.03392,0.03485,0.03512,0.0377,0.04041]]),]
 #filename = join(["demo-", Dates.format(now(), "yyyy-mm-dd-HH-MM"),".tsv"])
-filename = "demo100_000.tsv"
+filename = "demo.tsv"
 io = open(filename, "w")
-simulate(algorithms, bandits, T, S, [100_000], io)
+simulate(algorithms, bandits, T, S, [100], io)
 close(io)
+print("finished writing simulation output to ", filename, "\n")

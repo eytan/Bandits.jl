@@ -6,15 +6,14 @@ function simulate(
     delays::Vector,
     io::IO = STDOUT,
 )
-    game_statistics = CoreSingleGameStatistics(T)
-    
     # Print out a header to STDOUT in TSV format
     @printf(io, "algorithm\tbandit\tdelay\tT\tmetric")
     @printf(io, "\tmean\tmin\tq025\tq25\tq50\tq75\tq975\tmax\n")
 
     # Generate data and print it to STDOUT in TSV format
     for delay in delays
-        step_size = round(Int, max(delay/10,1))
+        step_size = round(Int, max(delay/10, 1))
+        game_statistics = CoreSingleGameStatistics(T, step_size)
         avg_game_statistics = CoreAverageGameStatistics(S, T, step_size)
         for algorithm in algorithms
             for (bandit_id, bandit) in enumerate(bandits)
