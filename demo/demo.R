@@ -2,7 +2,7 @@ library(ggplot2)
 library(dplyr)
 
 #tmp <- read.csv("big_demo1s.tsv", sep = "\t")
-tmp <- read.csv("lil_demo1.tsv", sep = "\t")
+tmp <- read.csv("demo.tsv", sep = "\t")
 
 tmp %>%
   filter(metric=='cumulative_regret', T>3) %>%
