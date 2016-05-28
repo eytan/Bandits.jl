@@ -3,6 +3,7 @@ __precompile__(false)
 module Bandits
     using Distributions
     using StatsFuns
+    using StatsBase
     # using HypothesisTests
 
     # Contexts
@@ -42,6 +43,7 @@ module Bandits
         Exp3,
         ThompsonSampling,
         TopKThompsonSampling,
+        RewardSampling,
         Hedge,
         MOSS,
         ReinforcementComparison,
@@ -62,6 +64,7 @@ module Bandits
     include(joinpath("04_algorithms", "06_exp", "01_exp3.jl"))
     include(joinpath("04_algorithms", "07_thompson", "01_standard.jl"))
     include(joinpath("04_algorithms", "07_thompson", "02_top_k.jl"))
+    include(joinpath("04_algorithms", "07_thompson", "03_reward.jl"))
     include(joinpath("04_algorithms", "08_hedge", "01_standard.jl"))
     include(joinpath("04_algorithms", "09_moss", "01_standard.jl"))
     include(joinpath("04_algorithms", "10_rl", "01_comparison.jl"))
