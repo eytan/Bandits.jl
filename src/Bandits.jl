@@ -3,7 +3,6 @@ __precompile__(false)
 module Bandits
     using Distributions
     using StatsFuns
-    using StatsBase
     # using HypothesisTests
 
     # Contexts
@@ -43,7 +42,6 @@ module Bandits
         Exp3,
         ThompsonSampling,
         TopKThompsonSampling,
-        RewardSampling,
         Hedge,
         MOSS,
         ReinforcementComparison,

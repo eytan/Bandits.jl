@@ -84,21 +84,19 @@ function update!(
     r::Real,
     g::Real,
 )
-    step_size = statistics.step_size
-    step = ceil(Int, float(c.t)/step_size)
+    step = ceil(Int, float(c.t)/statistics.step_size)
     ts = c.t % statistics.step_size + 1     # counter for inner step
 
-    α = 1.0 / step_size
+    α = 1.0 / statistics.step_size
     statistics.cumulative_regret_s[1] += g
 
     statistics.reward[step] += α * r
     statistics.regret[step] += α * g
 
     # per-step statistics are only computed at the end of each step
-    if ts != step_size
+    if ts != statistics.step_size
       return
     end
-    #print(c.t, " ", step, " ", statistics.step_size, " ", ts, "\n")
 
     if step == 1
       statistics.cumulative_regret[step] = statistics.cumulative_regret_s[1]
