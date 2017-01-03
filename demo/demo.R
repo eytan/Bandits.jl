@@ -1,63 +1,25 @@
 library(ggplot2)
 library(dplyr)
-library(scales)
-setwd('/Users/ebakshy/.julia/v0.4/Bandits/demo')
-
+library(readr)
+setwd('~/gh/Bandits.jl/demo/')
 #tmp <- read.csv("big_demo1s.tsv", sep = "\t")
-#tmp <- read.csv("demo.tsv", sep = "\t")
-tmp <- read.csv("foo.csv", sep = "\t")
-
-probs <- c(0.1526,0.1304,0.101,0.0944,0.0847,0.0805,0.0781,0.0748,0.0726,.0727)
-max.prob <- max(probs)
-min.prob <- min(probs)
+tmp <- read_tsv("demo.tsv") %>% filter(T%%100==0)
 
 tmp %>%
   filter(metric=='cumulative_regret', T>3) %>%
-  mutate(
-    q50=T*max.prob-q50,
-    q75=T*max.prob-q75,
-    q25=T*max.prob-q25,
-    q975=T*max.prob-q975,
-    q025=T*max.prob-q025
-    ) %>%
-qplot(
-x = T, y = q50, color = algorithm,fill=algorithm, data=.,geom='line', xlim=c(0,1e4),
-ylab='Total conversions', xlab='Exposed users', main='Realized conversions with bandits') +facet_grid(delay ~ .) + theme_bw() +
-geom_abline(slope=max.prob) +
-  geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) +
-geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.5) 
-
-
-tmp %>%
-  filter(metric=='cumulative_regret', T>3) %>%
- # mutate(algorithm=ifelse(algorithm=='RandomChoice', 'A/B test', 'Bandit')) %>%
-qplot(
-x = T, y = q50, color = algorithm,fill=algorithm, data=.,geom='line',
-ylab='Cumulative regret', xlab='Exposed users', main='Conversions lost') +
-geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) + 
-geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.25) + 
-geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
-theme_bw()
- #   facet_grid(delay ~ .) + theme_bw()
-    
-   
-
-tmp %>%
-  filter(metric=='reward', T>3) %>%
 qplot(
 x = T/1000, y = q50, color = algorithm,fill=algorithm, data=.,geom='line',
 ylab='Cumulative regret', xlab='T/1000', main='Regret distribution') +
 geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) + 
+    facet_grid(delay ~ .) +
 geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.25) + 
-geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
-    facet_grid(delay ~ .) + theme_bw()
+geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01)+ theme_bw()
     
-
 tmp %>%
-  filter(metric=='knows_best', T>3) %>%
+  filter(metric=='cumulative_regret', T>3) %>%
 qplot(
-x = T/1000, y = q50, color = algorithm,fill=algorithm, facets=.~delay, data=.,geom='line',
-ylab='knows best', xlab='T/1000', main='Regret distribution') +
+x = T/1000, y = q50, color = algorithm,fill=algorithm, data=.,geom='line',
+ylab='Cumulative regret', xlab='T/1000', main='Regret distribution') +
 geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) + 
 geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.25) + 
 geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
@@ -66,7 +28,7 @@ geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
 
     
 tmp %>%
-  filter(metric=='mse', T>3) %>%
+  filter(metric=='knows_best', T>3) %>%
 qplot(
 x = T, y = mean, color = algorithm,fill=algorithm, data=.,geom='line') + 
     facet_grid(delay ~ .) + theme_bw()
@@ -77,10 +39,10 @@ tmp %>%
 qplot(
 x = T, y = q50, color = algorithm,fill=algorithm, data=.,geom='line',
 ylab='cumulative regret', main='regret distribution',log='y') +
-facet_grid(.~algorithm ) + theme_bw() +
 geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) + 
 geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.25) + 
-geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01)
+geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
+    facet_grid(.~algorithm ) + theme_bw()
     
     
  
