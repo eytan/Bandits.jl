@@ -4,6 +4,7 @@ library(readr)
 setwd('~/gh/Bandits.jl/demo/')
 #tmp <- read.csv("big_demo1s.tsv", sep = "\t")
 tmp <- read_tsv("demo.tsv") %>% filter(T%%100==0)
+tmp <- read_tsv("recent_qp.tsv") %>% filter(T%%100==0)
 
 tmp %>%
   filter(metric=='cumulative_regret', T>3) %>%

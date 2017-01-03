@@ -81,7 +81,7 @@ function learn!{T <: Real}(
     end
     learner.ns[a] += 1
     learner.μs[a] = mean(Beta(learner.αs[a], learner.βs[a]))
-    learner.σs[a] = std(Bernoulli(mean(Beta(learner.αs[a], learner.βs[a]))))
+    learner.σs[a] = std(Bernoulli(learner.μs[a]))
 
     return
 end

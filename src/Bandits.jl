@@ -19,12 +19,14 @@ module Bandits
     include(joinpath("02_bandits", "03_contextual_bandit.jl"))
 
     # Learners
-    export Learner, MLELearner, BetaLearner, BootstrapLearner, BootstrapMLELearner
+    export Learner, MLELearner, BetaLearner, BootstrapLearner,
+        BootstrapMLELearner, EBBetaLearner
     export initialize!, counts, means, stds, learn!, preferred_arm
     include(joinpath("03_learners", "01_learner.jl"))
     include(joinpath("03_learners", "02_mle_learner.jl"))
     include(joinpath("03_learners", "03_beta_learner.jl"))
     include(joinpath("03_learners", "04_bootstrap_learner.jl"))
+    include(joinpath("03_learners", "05_eb_beta_learner.jl"))
 
     # Algorithms
     export
