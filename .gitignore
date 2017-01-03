@@ -1,3 +1,5 @@
 demo/*.pdf
 demo/*.jpg
 demo/*.tsv
+
+demo/.Rapp.history

@@ -1,8 +1,9 @@
 library(ggplot2)
 library(dplyr)
-
+library(readr)
+setwd('~/gh/Bandits.jl/demo/')
 #tmp <- read.csv("big_demo1s.tsv", sep = "\t")
-tmp <- read.csv("lil_demo1.tsv", sep = "\t")
+tmp <- read_tsv("demo.tsv") %>% filter(T%%100==0)
 
 tmp %>%
   filter(metric=='cumulative_regret', T>3) %>%
@@ -10,9 +11,9 @@ qplot(
 x = T/1000, y = q50, color = algorithm,fill=algorithm, data=.,geom='line',
 ylab='Cumulative regret', xlab='T/1000', main='Regret distribution') +
 geom_ribbon(aes(ymin=q25+0.001,ymax=q75+0.001), alpha=0.5) + 
+    facet_grid(delay ~ .) +
 geom_ribbon(aes(ymin=q025+0.001,ymax=q975+0.001), alpha=0.25) + 
-geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01) +
-    facet_grid(delay ~ algorithm) + theme_bw()
+geom_ribbon(aes(ymin=min,ymax=max), alpha=0.01)+ theme_bw()
     
 tmp %>%
   filter(metric=='cumulative_regret', T>3) %>%
