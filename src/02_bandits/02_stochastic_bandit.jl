@@ -38,7 +38,7 @@ end
 Construct a new StochasticBandit object from a vector of probability
 distribution objects.
 """ ->
-function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D})
+function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D}, t::Integer)
     return StochasticBandit{D}(arms)
 end
 
@@ -73,4 +73,4 @@ function best_arm(bandit::StochasticBandit, context::Context)
     return bandit.best_arm
 end
 
-means(bandit::StochasticBandit) = bandit.means
+means(bandit::StochasticBandit, context::Context) = bandit.means

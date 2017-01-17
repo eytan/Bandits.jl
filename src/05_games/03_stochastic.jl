@@ -5,7 +5,7 @@ regret.
 """ ->
 immutable StochasticGame{A <: Algorithm} <: Game
     algorithm::A
-    bandit::StochasticBandit
+    bandit::Bandit #::StochasticBandit
     T::Int
     delay::Int
     queue::DataQueue{StochasticContext}

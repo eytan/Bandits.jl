@@ -6,27 +6,43 @@ module Bandits
     # using HypothesisTests
 
     # Contexts
-    export Context, MinimalContext, StochasticContext
+    export Context, MinimalContext, StochasticContext, DataContext
     include(joinpath("01_contexts", "01_context.jl"))
     include(joinpath("01_contexts", "02_minimal_context.jl"))
     include(joinpath("01_contexts", "03_stochastic_context.jl"))
+    include(joinpath("01_contexts", "04_data_context.jl"))
+
+    # Distributions
+    export NonStationaryUnivariateDistribution, NonStationaryBernoulliDistribution
+    export NonStationaryMultivariateDistribution, NonStationaryContextualDistribution
+    export NonStationaryLogisticContextualDistribution, NonStationaryGaussianDistribution
+    export NonStationary1DGaussianProcessDistribution
+    include(joinpath("07_distributions", "01_nonstationary_univariate_distribution.jl"))
+    include(joinpath("07_distributions", "02_nonstationary_bernoulli_distribution.jl"))
+    include(joinpath("07_distributions", "03_nonstationary_multivariate_distribution.jl"))
+    include(joinpath("07_distributions", "04_nonstationary_contextual_distribution.jl"))
+    include(joinpath("07_distributions", "05_nonstationary_logistic_contextual_distribution.jl"))
+    include(joinpath("07_distributions", "06_nonstationary_gaussian_distribution.jl"))    
+    include(joinpath("07_distributions", "07_nonstationary_1dgaussianprocess_distribution.jl"))
 
     # Bandit
-    export Bandit, StochasticBandit, ContextualBandit
+    export Bandit, StochasticBandit, ContextualBandit, MovingBandit
     export draw, regret, count_arms, best_arm
     include(joinpath("02_bandits", "01_bandit.jl"))
     include(joinpath("02_bandits", "02_stochastic_bandit.jl"))
     include(joinpath("02_bandits", "03_contextual_bandit.jl"))
+    include(joinpath("02_bandits", "04_moving_bandit.jl"))
 
     # Learners
     export Learner, MLELearner, BetaLearner, BootstrapLearner,
-        BootstrapMLELearner, EBBetaLearner
+        BootstrapMLELearner, EBBetaLearner, DiscLearner
     export initialize!, counts, means, stds, learn!, preferred_arm
     include(joinpath("03_learners", "01_learner.jl"))
     include(joinpath("03_learners", "02_mle_learner.jl"))
     include(joinpath("03_learners", "03_beta_learner.jl"))
     include(joinpath("03_learners", "04_bootstrap_learner.jl"))
     include(joinpath("03_learners", "05_eb_beta_learner.jl"))
+    include(joinpath("03_learners", "05_disc_learner.jl"))
 
     # Algorithms
     export
@@ -41,7 +57,9 @@ module Bandits
         UCB1Tuned,
         UCB2,
         UCBV,
+        UCB1Disc,
         Exp3,
+        RExp3,
         ThompsonSampling,
         TopKThompsonSampling,
         Hedge,
@@ -61,7 +79,9 @@ module Bandits
     include(joinpath("04_algorithms", "05_ucb", "02_ucb1_tuned.jl"))
     include(joinpath("04_algorithms", "05_ucb", "03_ucb2.jl"))
     include(joinpath("04_algorithms", "05_ucb", "04_ucb_v.jl"))
+    include(joinpath("04_algorithms", "05_ucb", "05_ucb1_disc.jl"))
     include(joinpath("04_algorithms", "06_exp", "01_exp3.jl"))
+    include(joinpath("04_algorithms", "06_exp", "02_rexp3.jl"))
     include(joinpath("04_algorithms", "07_thompson", "01_standard.jl"))
     include(joinpath("04_algorithms", "07_thompson", "02_top_k.jl"))
     include(joinpath("04_algorithms", "08_hedge", "01_standard.jl"))

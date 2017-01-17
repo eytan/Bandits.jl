@@ -93,11 +93,3 @@ end
 function Base.show(io::IO, learner::MLELearner)
     @printf(io, "MLELearner(%f, %f)", learner.μ₀, learner.σ₀)
 end
-
-
-@doc """
-Draw a sample from the posterior for arm a.
-""" ->
-function Base.rand(learner::MLELearner, a::Integer)
-    return rand(Normal(learner.μs[a], sqrt(max(learner.σs[a], 0.1))))
-end

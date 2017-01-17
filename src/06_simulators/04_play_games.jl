@@ -9,7 +9,6 @@ function play_games!(
 )
     game = StochasticGame(algorithm, bandit, T, delay)
     for s in 1:S
-        reinitialize!(game_statistics)
         play_game!(game, game_statistics)
         update!(avg_game_statistics, game_statistics, s)
     end

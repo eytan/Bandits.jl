@@ -55,6 +55,7 @@ function initialize!(learner::BetaLearner, K::Integer)
     fill!(learner.αs, learner.α₀)
     fill!(learner.βs, learner.β₀)
     fill!(learner.ns, 0)
+
     for a in 1:K
         learner.μs[a] = mean(Beta(learner.αs[a], learner.βs[a]))
         learner.σs[a] = std(Beta(learner.αs[a], learner.βs[a]))
@@ -81,7 +82,7 @@ function learn!{T <: Real}(
     end
     learner.ns[a] += 1
     learner.μs[a] = mean(Beta(learner.αs[a], learner.βs[a]))
-    learner.σs[a] = std(Bernoulli(learner.μs[a]))
+    learner.σs[a] = std(Bernoulli(mean(Beta(learner.αs[a], learner.βs[a]))))
 
     return
 end
