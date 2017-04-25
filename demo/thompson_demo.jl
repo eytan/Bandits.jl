@@ -32,6 +32,7 @@ learner = MLELearner(0.5, 0.25)
 
 algorithms = [
     ThompsonSampling(BetaLearner(0.5, 0.5)),
+    ThompsonSampling(EBBetaLearner(0.1, 0.1)),
     #RewardSampling(BetaLearner(0.5, 0.5)),
     #ThompsonSampling(MLELearner(0.5, 1)),
     RandomChoice(learner),
