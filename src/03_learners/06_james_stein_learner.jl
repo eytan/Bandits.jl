@@ -1,8 +1,8 @@
 @doc """
-A EBMLELearner object stores the online estimated mean and variance of all
+A JamesSteinLearner object stores the online estimated mean and variance of all
 arms. Arms with zero counts use a default mean and standard deviation.
 """ ->
-immutable EBMLELearner <: Learner
+immutable JamesSteinLearner <: Learner
     ns::Vector{Int64}
     oldMs::Vector{Float64}
     newMs::Vector{Float64}
@@ -15,11 +15,11 @@ immutable EBMLELearner <: Learner
 end
 
 @doc """
-Create an EBMLELearner object specifying only a default mean and standard
+Create an JamesSteinLearner object specifying only a default mean and standard
 deviation.
 """ ->
-function EBMLELearner(μ₀::Real, σ₀::Real)
-    return EBMLELearner(
+function JamesSteinLearner(μ₀::Real, σ₀::Real)
+    return JamesSteinLearner(
       Array(Int64, 0),
       Array(Float64, 0),
       Array(Float64, 0),
@@ -35,22 +35,22 @@ end
 @doc """
 Return the counts for each arm.
 """ ->
-counts(learner::EBMLELearner) = learner.ns
+counts(learner::JamesSteinLearner) = learner.ns
 
 @doc """
 Return the means for each arm.
 """ ->
-means(learner::EBMLELearner) = learner.μ̃s
+means(learner::JamesSteinLearner) = learner.μ̃s
 
 @doc """
 Return the standard deviations for each arm.
 """ ->
-stds(learner::EBMLELearner) = learner.σ̃s
+stds(learner::JamesSteinLearner) = learner.σ̃s
 
 @doc """
-Reset the EBMLELearner object for K arms.
+Reset the JamesSteinLearner object for K arms.
 """ ->
-function initialize!(learner::EBMLELearner, K::Integer)
+function initialize!(learner::JamesSteinLearner, K::Integer)
     learner.K = K
     resize!(learner.ns, K)
     resize!(learner.oldMs, K)
@@ -72,7 +72,7 @@ end
 Learn about arm a on trial t from reward r.
 """ ->
 function learn!(
-    learner::EBMLELearner,
+    learner::JamesSteinLearner,
     context::Context,
     a::Integer,
     r::Real,
@@ -104,6 +104,6 @@ function learn!(
     return
 end
 
-function Base.show(io::IO, learner::EBMLELearner)
-    @printf(io, "EBMLELearner(%f, %f)", learner.μ₀, learner.σ₀)
+function Base.show(io::IO, learner::JamesSteinLearner)
+    @printf(io, "JamesSteinLearner(%f, %f)", learner.μ₀, learner.σ₀)
 end
