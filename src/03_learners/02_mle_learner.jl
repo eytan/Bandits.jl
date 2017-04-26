@@ -90,6 +90,18 @@ function learn!(
     return
 end
 
+@doc """
+Draw a sample from the posterior for arm a.
+""" ->
+function Base.rand(learner::MLELearner, a::Integer)
+    o = try
+        rand(Normal(learner.μs[a], σ))
+    catch
+        rand(Normal(learner.μs[a],learner.σ₀))
+    end
+    return o
+end
+
 function Base.show(io::IO, learner::MLELearner)
     @printf(io, "MLELearner(%f, %f)", learner.μ₀, learner.σ₀)
 end
