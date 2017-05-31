@@ -77,14 +77,14 @@ function learn!(
 
     if nᵢ == 1
         learner.oldMs[a] = r
-        learner.Ss[a] = 0.0
+        learner.Ss[a] = learner.σ₀
         learner.μs[a] = r
     else
         learner.newMs[a] = learner.oldMs[a] + (r - learner.oldMs[a]) / nᵢ
         learner.Ss[a] += (r - learner.oldMs[a]) * (r - learner.newMs[a])
         learner.oldMs[a] = learner.newMs[a]
         learner.μs[a] = learner.newMs[a]
-        learner.σs[a] = sqrt(learner.Ss[a] / (nᵢ - 1))
+        learner.σs[a] = sqrt(learner.Ss[a] / (nᵢ - 1) / nᵢ)
     end
 
     return
@@ -94,12 +94,7 @@ end
 Draw a sample from the posterior for arm a.
 """ ->
 function Base.rand(learner::MLELearner, a::Integer)
-    o = try
-        rand(Normal(learner.μs[a], σ))
-    catch
-        rand(Normal(learner.μs[a],learner.σ₀))
-    end
-    return o
+    return rand(Normal(learner.μs[a], learner.σs[a]))
 end
 
 function Base.show(io::IO, learner::MLELearner)

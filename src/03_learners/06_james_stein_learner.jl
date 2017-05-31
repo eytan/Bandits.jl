@@ -87,7 +87,7 @@ function learn!(
 
     if nᵢ == 1
         learner.oldMs[a] = r
-        learner.Ss[a] = 0.0
+        learner.Ss[a] = learner.σ₀
         learner.ys[a] = r
         learner.μs[a] = r
     else
@@ -95,14 +95,14 @@ function learn!(
         learner.Ss[a] += (r - learner.oldMs[a]) * (r - learner.newMs[a])
         learner.oldMs[a] = learner.newMs[a]
         learner.ys[a] = learner.newMs[a]
-        learner.ss[a] = sqrt(learner.Ss[a] / (nᵢ - 1))
+        learner.ss[a] = learner.Ss[a] / (nᵢ - 1) / nᵢ
         y̅ = mean(learner.ys)
-        φs = max(0.0, min(1.0, learner.ss ./ (sumabs2(learner.ys - y̅) ./ (learner.K - 3))))
-        learner.μs[:] = learner.ys + φs .* (y̅ - learner.ys)
+        φs = min(1.0, learner.ss ./ (sumabs2(learner.ys - y̅) ./ (learner.K - 3)))
+        learner.μs[:] = y̅ + (1 - φs) .* (learner.ys - y̅)
         learner.σs[:] = sqrt(
-          (1 - φs) .* learner.ss +
-          learner.ss ./ learner.K +
-          2 .* φs .* (learner.ys - y̅).^2 ./ (learner.K - 3)
+            (1 - φs) .* learner.ss +
+            φs .* learner.ss ./ learner.K +
+            2 .* φs.^2 .* (learner.ys - y̅).^2 ./ (learner.K - 3)
         )
     end
 
@@ -113,12 +113,7 @@ end
 Draw a sample from the posterior for arm a.
 """ ->
 function Base.rand(learner::JamesSteinLearner, a::Integer)
-    o = try
-        rand(Normal(learner.μs[a], learner.σs[a]))
-    catch
-        rand(Normal(learner.μs[a],learner.σ₀))
-    end
-    return o
+    return rand(Normal(learner.μs[a], learner.σs[a]))
 end
 
 function Base.show(io::IO, learner::JamesSteinLearner)
