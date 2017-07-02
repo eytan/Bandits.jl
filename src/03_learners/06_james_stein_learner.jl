@@ -98,11 +98,11 @@ function learn!(
         learner.ss[a] = learner.Ss[a] / (nᵢ - 1) / nᵢ
         y̅ = mean(learner.ys)
         φs = min(1.0, learner.ss ./ (sumabs2(learner.ys - y̅) ./ (learner.K - 3)))
-        learner.μs[:] = y̅ + (1 - φs) .* (learner.ys - y̅)
-        learner.σs[:] = sqrt(
-            (1 - φs) .* learner.ss +
-            φs .* learner.ss ./ learner.K +
-            2 .* φs.^2 .* (learner.ys - y̅).^2 ./ (learner.K - 3)
+        learner.μs .= y̅ .+ (1 .- φs) .* (learner.ys .- y̅)
+        learner.σs .= sqrt(
+            (1 .- φs) .* learner.ss .+
+            φs .* learner.ss ./ learner.K .+
+            2 .* φs.^2 .* (learner.ys .- y̅).^2 ./ (learner.K .- 3)
         )
     end
 
