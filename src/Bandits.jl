@@ -22,7 +22,7 @@ module Bandits
     include(joinpath("07_distributions", "03_nonstationary_multivariate_distribution.jl"))
     include(joinpath("07_distributions", "04_nonstationary_contextual_distribution.jl"))
     include(joinpath("07_distributions", "05_nonstationary_logistic_contextual_distribution.jl"))
-    include(joinpath("07_distributions", "06_nonstationary_gaussian_distribution.jl"))    
+    include(joinpath("07_distributions", "06_nonstationary_gaussian_distribution.jl"))
     include(joinpath("07_distributions", "07_nonstationary_1dgaussianprocess_distribution.jl"))
 
     # Bandit
@@ -35,7 +35,7 @@ module Bandits
 
     # Learners
     export Learner, MLELearner, BetaLearner, BootstrapLearner,
-        BootstrapMLELearner, EBBetaLearner, DiscLearner
+        BootstrapMLELearner, EBBetaLearner, DiscLearner, JamesSteinLearner
     export initialize!, counts, means, stds, learn!, preferred_arm
     include(joinpath("03_learners", "01_learner.jl"))
     include(joinpath("03_learners", "02_mle_learner.jl"))
@@ -43,6 +43,7 @@ module Bandits
     include(joinpath("03_learners", "04_bootstrap_learner.jl"))
     include(joinpath("03_learners", "05_eb_beta_learner.jl"))
     include(joinpath("03_learners", "05_disc_learner.jl"))
+    include(joinpath("03_learners", "06_james_stein_learner.jl"))
 
     # Algorithms
     export

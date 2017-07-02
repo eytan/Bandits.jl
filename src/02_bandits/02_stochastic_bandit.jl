@@ -38,6 +38,14 @@ end
 Construct a new StochasticBandit object from a vector of probability
 distribution objects.
 """ ->
+function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D})
+    return StochasticBandit{D}(arms)
+end
+
+@doc """
+Construct a new StochasticBandit object from a vector of probability
+distribution objects and a time period integer.
+""" ->
 function StochasticBandit{D <: UnivariateDistribution}(arms::Vector{D}, t::Integer)
     return StochasticBandit{D}(arms)
 end
