@@ -1,6 +1,9 @@
 __precompile__(false)
 
 module Bandits
+    using Printf
+    using Statistics
+    using Random
     using Distributions
     using StatsFuns
     # using HypothesisTests

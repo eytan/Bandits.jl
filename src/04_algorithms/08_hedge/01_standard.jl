@@ -1,4 +1,4 @@
-type Hedge{L <: Learner} <: Algorithm
+struct Hedge{L <: Learner} <: Algorithm
     learner::L
     η::Float64
     sums::Vector{Float64}
@@ -9,9 +9,9 @@ end
 Hedge(learner::Learner, η::Real) = Hedge(
     learner,
     Float64(η),
-    Array(Float64, 0),
-    Array(Float64, 0),
-    Array(Float64, 0),
+    Array{Float64}(undef, 0),
+    Array{Float64}(undef, 0),
+    Array{Float64}(undef, 0),
 )
 
 function initialize!(algorithm::Hedge, K::Integer)

@@ -1,4 +1,4 @@
-immutable ThompsonSampling{L <: Learner} <: Algorithm
+struct ThompsonSampling{L <: Learner} <: Algorithm
     learner::L
 end
 

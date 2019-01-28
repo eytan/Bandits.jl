@@ -1,11 +1,11 @@
-immutable Pursuit{L <: Learner} <: Algorithm
+struct Pursuit{L <: Learner} <: Algorithm
     learner::L
     β::Float64
     ps::Vector{Float64}
 end
 
 function Pursuit(learner::Learner, β::Real)
-    return Pursuit(learner, Float64(β), Array(Float64, 0))
+    return Pursuit(learner, Float64(β), Array{Float64}(undef, 0))
 end
 
 function initialize!(algorithm::Pursuit, K::Integer)

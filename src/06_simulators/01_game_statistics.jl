@@ -1,9 +1,9 @@
-@doc """
+"""
 Maintain statistics for each trial of a game.
-""" ->
-abstract SingleGameStatistics
+"""
+abstract type SingleGameStatistics end
 
-@doc """
+"""
 Maintain statistics for each trial of a game. This data structure represents
 the minimal statistics we want to accumulate about each game:
 
@@ -14,8 +14,8 @@ the minimal statistics we want to accumulate about each game:
 * Per trial: Was the optimal arm chosen?
 * Per trial: Did the learner know which arm was optimal?
 * Per-trial cumulative reward (for non-stationary arms)
-""" ->
-immutable CoreSingleGameStatistics <: SingleGameStatistics
+"""
+struct CoreSingleGameStatistics <: SingleGameStatistics
     T::Int
     reward::Vector{Float64}
     instantaneous_regret::Vector{Float64}
@@ -28,15 +28,15 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
     cumulative_reward::Vector{Float64}
 
     function CoreSingleGameStatistics(T::Integer)
-        reward = Array(Float64, T)
-        instantaneous_regret = Array(Float64, T)
-        cumulative_regret = Array(Float64, T)
-        chosen_arm = Array(Int, T)
-        chose_best = BitArray(T)
-        knows_best = BitArray(T)
-        mse = Array(Float64, T)
-        se_best = Array(Float64, T)
-        cumulative_reward = Array(Float64, T)
+        reward = Array{Float64}(undef, T)
+        instantaneous_regret = Array{Float64}(undef, T)
+        cumulative_regret = Array{Float64}(undef, T)
+        chosen_arm = Array{Int}(undef, T)
+        chose_best = BitArray(undef, T)
+        knows_best = BitArray(undef, T)
+        mse = Array{Float64}(undef, T)
+        se_best = Array{Float64}(undef, T)
+        cumulative_reward = Array{Float64}(undef, T)
         return new(
             T,
             reward,
@@ -52,9 +52,9 @@ immutable CoreSingleGameStatistics <: SingleGameStatistics
     end
 end
 
-@doc """
+"""
 Update statistics for the current trial.
-""" ->
+"""
 function update!(
     statistics::CoreSingleGameStatistics,
     learner::Learner,

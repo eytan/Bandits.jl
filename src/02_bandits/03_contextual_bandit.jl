@@ -1,1 +1,1 @@
-abstract ContextualBandit <: ProbabilisticBandit
+abstract type ContextualBandit <: ProbabilisticBandit end

@@ -1,4 +1,4 @@
-immutable UCB1Disc{L <: DiscLearner} <: Algorithm
+struct UCB1Disc{L <: DiscLearner} <: Algorithm
     learner::L
 end
 

@@ -1,4 +1,4 @@
-immutable TopKThompsonSampling{L <: Learner} <: Algorithm
+struct TopKThompsonSampling{L <: Learner} <: Algorithm
     learner::L
     top_k::Int64
 end

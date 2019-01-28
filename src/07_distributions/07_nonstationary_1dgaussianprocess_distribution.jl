@@ -1,11 +1,9 @@
-import Base.rand
-import Base.mean
 using GaussianProcesses
 
-@doc """
+"""
 A NonStationary1DGaussianProcessDistribution ...
-""" ->
-immutable NonStationary1DGaussianProcessDistribution <: NonStationaryUnivariateDistribution
+"""
+struct NonStationary1DGaussianProcessDistribution <: NonStationaryUnivariateDistribution
 
     meanGP::Float64
     variance::Float64
@@ -37,15 +35,15 @@ immutable NonStationary1DGaussianProcessDistribution <: NonStationaryUnivariateD
 end
 
 
-@doc """
+"""
 Return the mean of the distribution at time t (or t=0 otherwise).
 """
-function mean(d::NonStationary1DGaussianProcessDistribution, t=0.0::Float64)
+function Statistics.mean(d::NonStationary1DGaussianProcessDistribution, t=0.0::Float64)
     t_to_sample = normalize_time(d, t)
     return sigmoid(d.sampled_data[t_to_sample])
 end
 
-@doc """
+"""
 Sample one random from the distribution at time t (or t=0 otherwise).
 """
 function rand(d::NonStationary1DGaussianProcessDistribution, t=0.0::Float64)

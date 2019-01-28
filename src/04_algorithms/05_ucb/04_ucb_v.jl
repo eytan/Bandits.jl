@@ -2,7 +2,7 @@
 # (1) Play all arms twice, not once
 # (2) Use unbiased sample variance, not biased sample variance
 
-immutable UCBV{L <: Learner} <: Algorithm
+struct UCBV{L <: Learner} <: Algorithm
     learner::L
     b::Float64 # Upper bound on rewards
     c::Float64

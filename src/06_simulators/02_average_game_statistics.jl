@@ -1,12 +1,12 @@
-abstract AverageGameStatistics
+abstract type AverageGameStatistics end
 
-immutable CoreAverageGameStatistics <: AverageGameStatistics
+struct CoreAverageGameStatistics <: AverageGameStatistics
     S::Int
     T::Int
     games::Vector{CoreSingleGameStatistics}
 
     function CoreAverageGameStatistics(S::Integer, T::Integer)
-        games = Array(CoreSingleGameStatistics, S)
+        games = Array{CoreSingleGameStatistics}(undef, S)
 
         return new(
             S,

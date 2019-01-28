@@ -1,8 +1,8 @@
-@doc """
+"""
 A MLELearner object stores the online estimated mean and variance of all
 arms. Arms with zero counts use a default mean and standard deviation.
-""" ->
-immutable MLELearner <: Learner
+"""
+struct MLELearner <: Learner
     ns::Vector{Int64}
     oldMs::Vector{Float64}
     newMs::Vector{Float64}
@@ -13,41 +13,41 @@ immutable MLELearner <: Learner
     σ₀::Float64
 end
 
-@doc """
+"""
 Create an MLELearner object specifying only a default mean and standard
 deviation.
-""" ->
+"""
 function MLELearner(μ₀::Real, σ₀::Real)
     return MLELearner(
-      Array(Int64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
+      Array{Int64}(undef, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
       Float64(μ₀),
       Float64(σ₀),
     )
 end
 
-@doc """
+"""
 Return the counts for each arm.
-""" ->
+"""
 counts(learner::MLELearner) = learner.ns
 
-@doc """
+"""
 Return the means for each arm.
-""" ->
+"""
 means(learner::MLELearner) = learner.μs
 
-@doc """
+"""
 Return the standard deviations for each arm.
-""" ->
+"""
 stds(learner::MLELearner) = learner.σs
 
-@doc """
+"""
 Reset the MLELearner object for K arms.
-""" ->
+"""
 function initialize!(learner::MLELearner, K::Integer)
     resize!(learner.ns, K)
     resize!(learner.oldMs, K)
@@ -63,9 +63,9 @@ function initialize!(learner::MLELearner, K::Integer)
     return
 end
 
-@doc """
+"""
 Learn about arm a on trial t from reward r.
-""" ->
+"""
 function learn!(
     learner::MLELearner,
     context::Context,

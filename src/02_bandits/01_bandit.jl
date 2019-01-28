@@ -1,21 +1,21 @@
-@doc """
+"""
 A Bandit object represents a multi-armed bandit. It is an abstract type,
 which sits above many more specific types of bandits.
-""" ->
-abstract Bandit
+"""
+abstract type Bandit end
 
-abstract ProbabilisticBandit <: Bandit
+abstract type ProbabilisticBandit <: Bandit end
 
-abstract AdversarialBandit <: Bandit
+abstract type AdversarialBandit <: Bandit end
 
-abstract DuelingBandits <: Bandit
+abstract type DuelingBandits <: Bandit end
 
-abstract NonStationaryBandit <: ProbabilisticBandit
+abstract type NonStationaryBandit <: ProbabilisticBandit end
 
-abstract MarkovianBandit <: NonStationaryBandit
+abstract type MarkovianBandit <: NonStationaryBandit end
 
-abstract RestlessBandits <: NonStationaryBandit
+abstract type RestlessBandits <: NonStationaryBandit end
 
-abstract ChangePointBandits <: NonStationaryBandit
+abstract type ChangePointBandits <: NonStationaryBandit end
 
-abstract SleepingBandits <: NonStationaryBandit
+abstract type SleepingBandits <: NonStationaryBandit end

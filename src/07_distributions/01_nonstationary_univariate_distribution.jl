@@ -1,1 +1,1 @@
-abstract NonStationaryUnivariateDistribution <: DiscreteUnivariateDistribution
+abstract type NonStationaryUnivariateDistribution <: DiscreteUnivariateDistribution end

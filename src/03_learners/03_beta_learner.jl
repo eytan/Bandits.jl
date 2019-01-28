@@ -1,7 +1,7 @@
-@doc """
+"""
 A BetaLearner object stores a Beta posterior over all arms.
-""" ->
-immutable BetaLearner <: Learner
+"""
+struct BetaLearner <: Learner
     αs::Vector{Float64}
     βs::Vector{Float64}
     α₀::Float64
@@ -11,40 +11,40 @@ immutable BetaLearner <: Learner
     σs::Vector{Float64}
 end
 
-@doc """
+"""
 Create a BetaLearner object specifying the prior parameters. Defaults to
 the Jeffreys prior.
-""" ->
+"""
 function BetaLearner(α₀::Float64 = 0.5, β₀::Float64 = 0.5)
     return BetaLearner(
-      Array(Float64, 0),
-      Array(Float64, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
       Float64(α₀),
       Float64(β₀),
-      Array(Int64, 0),
-      Array(Float64, 0),
-      Array(Float64, 0),
+      Array{Int64}(undef, 0),
+      Array{Float64}(undef, 0),
+      Array{Float64}(undef, 0),
     )
 end
 
-@doc """
+"""
 Return the counts for each arm.
-""" ->
+"""
 counts(learner::BetaLearner) = learner.ns
 
-@doc """
+"""
 Return the means for each arm.
-""" ->
+"""
 means(learner::BetaLearner) = learner.μs
 
-@doc """
+"""
 Return the standard deviations for each arm.
-""" ->
+"""
 stds(learner::BetaLearner) = learner.σs
 
-@doc """
+"""
 Reset the BetaLearner object for K arms.
-""" ->
+"""
 function initialize!(learner::BetaLearner, K::Integer)
     resize!(learner.αs, K)
     resize!(learner.βs, K)
@@ -64,15 +64,15 @@ function initialize!(learner::BetaLearner, K::Integer)
     return
 end
 
-@doc """
+"""
 Learn about arm a on trial t from reward r.
-""" ->
-function learn!{T <: Real}(
+"""
+function learn!(
     learner::BetaLearner,
     context::Context,
     a::Integer,
     r::T,
-)
+) where T <: Real
     if r == one(T)
         learner.αs[a] += 1
     elseif r == zero(T)
@@ -87,9 +87,9 @@ function learn!{T <: Real}(
     return
 end
 
-@doc """
+"""
 Draw a sample from the posterior for arm a.
-""" ->
+"""
 function Base.rand(learner::BetaLearner, a::Integer)
     return rand(Beta(learner.αs[a], learner.βs[a]))
 end

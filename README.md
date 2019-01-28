@@ -4,6 +4,14 @@ A Julia package for simulating the behavior of new algorithms for solving
 multi-armed bandit problems, including the stochastic and contextual
 problems.
 
+# Local Installation
+
+```julia
+import Pkg
+Pkg.activate(".")
+Pkg.instantiate()
+```
+
 # Types
 
 * `Context`
