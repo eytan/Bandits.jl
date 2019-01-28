@@ -1,4 +1,4 @@
-immutable DataQueue{C <: Context}
+struct DataQueue{C <: Context}
     c::Vector{C}
     a::Vector{Int}
     r::Vector{Float64}

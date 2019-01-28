@@ -1,1 +1,1 @@
-abstract NonStationaryMultivariateDistribution <: ContinuousMultivariateDistribution
+abstract type NonStationaryMultivariateDistribution <: ContinuousMultivariateDistribution end

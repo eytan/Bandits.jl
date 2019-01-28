@@ -1,11 +1,8 @@
-import Base.rand
-import Base.mean
-
-@doc """
+"""
 A NonStationaryLogisticContextualDistribution...
 We add an intercept.
-""" ->
-immutable NonStationaryLogisticContextualDistribution <: NonStationaryContextualDistribution
+"""
+struct NonStationaryLogisticContextualDistribution <: NonStationaryContextualDistribution
 
     contextual_dist::NonStationaryMultivariateDistribution
     beta::Vector{Float64}
@@ -25,11 +22,11 @@ function contextual_function(d::NonStationaryLogisticContextualDistribution, con
     return 1 / (1 + exp(-lc))
 end
 
-@doc """
+"""
 Return the mean of the distribution at time t (or t=0 otherwise)
 for context X (or X=E[X] otherwise).
 """
-function mean(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, contextual_vector=DataContext(-1.0,0)::DataContext)
+function Statistics.mean(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, contextual_vector=DataContext(-1.0,0)::DataContext)
     if contextual_vector.t == -1.0
         mean_contextual_vector = DataContext(-1.0, 0, mean(d.contextual_dist))
         return contextual_function(d, mean_contextual_vector, t)
@@ -37,11 +34,11 @@ function mean(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, co
     return contextual_function(d, contextual_vector, t)
 end
 
-@doc """
+"""
 Sample one random from the distribution at time t (or t=0 otherwise).
 """
-function rand(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, size=1::Int64)
-    samples = Array(Float64, size)
+function Random.rand(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, size=1::Int64)
+    samples = Array{Float64}(undef, size)
     contextual_vectors = rand(d.contextual_dist, t, size)
     for i=1:size
         data_context = DataContext(Float64(t), 0, vec(contextual_vectors[:,i]))
@@ -53,4 +50,3 @@ function rand(d::NonStationaryLogisticContextualDistribution, t=0.0::Float64, si
     end
     return samples
 end
-

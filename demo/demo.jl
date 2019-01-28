@@ -1,3 +1,7 @@
+import Pkg
+Pkg.activate(".")
+Pkg.instantiate()
+
 using Bandits, Distributions
 
 # Number of trials in a game

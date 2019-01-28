@@ -1,11 +1,11 @@
-@doc """
+"""
 A DataContext object provides three pieces of information:
 
 * The current trial number
 * The number of arms
 * The contextual data of the pull
-""" ->
-immutable DataContext <: Context
+"""
+struct DataContext <: Context
     t::Float64
     K::Int
     data::Vector{Float64}

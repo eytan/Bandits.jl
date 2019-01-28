@@ -1,4 +1,4 @@
-immutable RExp3{L <: Learner} <: Algorithm
+struct RExp3{L <: Learner} <: Algorithm
     learner::L
     γ::Float64
     w::Vector{Float64}
@@ -7,7 +7,7 @@ immutable RExp3{L <: Learner} <: Algorithm
 end
 
 function RExp3(learner::Learner, γ::Real, batch_size::Int64)
-    RExp3(learner, Float64(γ), Array(Float64, 0), Array(Float64, 0), Int64(batch_size))
+    RExp3(learner, Float64(γ), Array{Float64}(undef, 0), Array{Float64}(undef, 0), Int64(batch_size))
 end
 
 function initialize!(algorithm::RExp3, K::Integer)

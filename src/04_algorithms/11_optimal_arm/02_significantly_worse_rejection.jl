@@ -9,7 +9,7 @@
 # An improved version may do some FDR sort of thing.
 # One interesting idea is that this might jive well with the
 # batch processing we are going to do anyways.
-type SignificantlyWorseRejection{L <: Learner} <: Algorithm
+mutable struct SignificantlyWorseRejection{L <: Learner} <: Algorithm
     learner::L
     active_arms::Vector{Int}  # IDs of arms that haven't been eliminated
     num_active_arms::Int
@@ -19,7 +19,7 @@ type SignificantlyWorseRejection{L <: Learner} <: Algorithm
 end
 
 function SignificantlyWorseRejection(learner::Learner)
-    SignificantlyWorseRejection(learner, Array(Int, 0), 0, 1)
+    SignificantlyWorseRejection(learner, Array{Int}(undef, 0), 0, 1)
 end
 
 function initialize!(algorithm::SignificantlyWorseRejection, K::Integer)
@@ -29,10 +29,10 @@ function initialize!(algorithm::SignificantlyWorseRejection, K::Integer)
     return
 end
 
-@doc """
+"""
 Learn about the reward distribution of the a-th arm. Most algorithms will
 delegate this method to an included learner object.
-""" ->
+"""
 function learn!(
     algorithm::SignificantlyWorseRejection,
     context::Context,

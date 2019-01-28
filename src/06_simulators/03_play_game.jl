@@ -1,7 +1,7 @@
-@doc """
+"""
 Simulate a single play of a stochastic bandit game. Store game statistics
 as the simulation proceeds.
-""" ->
+"""
 function play_game!(game::StochasticGame, statistics::SingleGameStatistics)
     # Set up aliases
     algorithm, bandit, T = game.algorithm, game.bandit, game.T

@@ -1,4 +1,4 @@
-immutable UCB1{L <: Learner} <: Algorithm
+struct UCB1{L <: Learner} <: Algorithm
     learner::L
 end
 

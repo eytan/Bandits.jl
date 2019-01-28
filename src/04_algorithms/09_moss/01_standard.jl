@@ -1,8 +1,8 @@
-immutable MOSS{L <: Learner} <: Algorithm
+struct MOSS{L <: Learner} <: Algorithm
     learner::L
 end
 
-MOSS(learner::Learner) = MOSS(learner, Array(Float64, 0))
+MOSS(learner::Learner) = MOSS(learner, Array{Float64}(undef, 0))
 
 function choose_arm(algorithm::MOSS, context::Context)
     μs = means(algorithm.learner)

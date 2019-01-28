@@ -1,9 +1,9 @@
-@doc """
+"""
 A StochasticGame type represents a Game between an Algorithm and a
 StochasticBandit. This simplifies many calculations, such as the calculation of
 regret.
-""" ->
-immutable StochasticGame{A <: Algorithm} <: Game
+"""
+struct StochasticGame{A <: Algorithm} <: Game
     algorithm::A
     bandit::Bandit #::StochasticBandit
     T::Int
@@ -12,11 +12,11 @@ immutable StochasticGame{A <: Algorithm} <: Game
 
     function StochasticGame(algorithm, bandit, T, delay)
         queue = DataQueue(
-            Array(StochasticContext, 0),
-            Array(Int, 0),
-            Array(Float64, 0),
+            Array{StochasticContext}(undef, 0),
+            Array{Int}(undef, 0),
+            Array{Float64}(undef, 0),
         )
-        return new(
+        return new{A}(
             algorithm,
             bandit,
             T,
@@ -26,7 +26,7 @@ immutable StochasticGame{A <: Algorithm} <: Game
     end
 end
 
-function StochasticGame{A <: Algorithm}(algorithm::A, bandit, T, delay)
+function StochasticGame(algorithm::A, bandit, T, delay) where A <: Algorithm
     return StochasticGame{A}(algorithm, bandit, T, delay)
 end
 

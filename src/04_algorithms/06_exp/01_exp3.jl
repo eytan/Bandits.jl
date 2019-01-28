@@ -1,4 +1,4 @@
-immutable Exp3{L <: Learner} <: Algorithm
+struct Exp3{L <: Learner} <: Algorithm
     learner::L
     γ::Float64
     w::Vector{Float64}
@@ -6,7 +6,7 @@ immutable Exp3{L <: Learner} <: Algorithm
 end
 
 function Exp3(learner::Learner, γ::Real)
-    Exp3(learner, Float64(γ), Array(Float64, 0), Array(Float64, 0))
+    Exp3(learner, Float64(γ), Array{Float64}(undef, 0), Array{Float64}(undef, 0))
 end
 
 function initialize!(algorithm::Exp3, K::Integer)

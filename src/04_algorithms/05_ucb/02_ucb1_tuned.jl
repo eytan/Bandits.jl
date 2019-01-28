@@ -1,7 +1,7 @@
 # Two differences from documented algorithm:
 # (1) Play all arms twice, not once
 # (2) Use unbiased sample variance, not biased sample variance
-immutable UCB1Tuned{L <: Learner} <: Algorithm
+struct UCB1Tuned{L <: Learner} <: Algorithm
     learner::L
 end
 

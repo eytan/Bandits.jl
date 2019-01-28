@@ -1,4 +1,4 @@
-immutable ReinforcementComparison{L <: Learner} <: Algorithm
+struct ReinforcementComparison{L <: Learner} <: Algorithm
     learner::L
     α::Float64
     β::Float64
@@ -19,9 +19,9 @@ function ReinforcementComparison(
         Float64(α),
         Float64(β),
         Float64(r0),
-        Array(Float64, 1),
-        Array(Float64, 0),
-        Array(Float64, 0),
+        Array{Float64}(undef, 1),
+        Array{Float64}(undef, 0),
+        Array{Float64}(undef, 0),
     )
 end
 

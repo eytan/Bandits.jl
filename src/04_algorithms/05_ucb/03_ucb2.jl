@@ -1,4 +1,4 @@
-immutable UCB2{L <: Learner} <: Algorithm
+struct UCB2{L <: Learner} <: Algorithm
     learner::L
     α::Float64
     r::Vector{Int64}
@@ -10,7 +10,7 @@ function UCB2(learner::Learner, α::Real)
     return UCB2(
         learner,
         Float64(α),
-        Array(Int64, 0),
+        Array{Int64}(undef, 0),
         [0],
         [0],
     )
